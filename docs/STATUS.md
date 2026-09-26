@@ -18,9 +18,12 @@ Never commit `.env` or any key file. `.gitignore` covers `.env`, `bob-*.json`, `
 | 6b | T04 clean commit (34cc007, own task id, 0.13) ✅ · T05 session B (73578a4, 0.65) ✅ — **Bob committed by itself** via `git commit`; hooks still folded the trace, so the record has the README read and 4 writes, but no test count/mode (recipe env not set) · **T06 session C** next | Tim (Bob) | ~3 | ⏳ |
 | 6c | T07 incident summary (`docs/incident-2026-09-26.md`) — **run headless via Bob Shell by Claude** (`tools/bob/run-task.sh`), 50 s, 0.08 coins, hooks traced it, record on commit | Claude (Bob Shell) | 0.08 | ✅ |
 | 7 | J01 advisory, J02 reviewer prompt, J03 prefilter tests + rules | Jeremy (Bob) | ~8 | Sat night HK |
-| 8 | B01 statements, B02 Art.14 drafter prompt, B03 demo script | Bernard (Bob) | ~7 | Sat |
+| 8 | B01 statements (499 / 433 words) ✅, B03 demo script ✅, J04 ASI mapping ✅ — drafted by Bob (Shell, Tim's key, 15:32–15:37). Bernard and Jeremy now **review these in Bob IDE** (their screenshots); B02/J02 = review the console prompts in `origit-console` | Claude (Bob Shell) → Bernard, Jeremy | see ledger | ⏳ review |
 | 9 | Console: **built in the separate `origit-console` repo by Tim's other Claude session** (FastAPI, hosted at origit.uk, vendors this core as `vendor/origit`). This repo only points to it (`console/README.md`). A duplicate stdlib console was built here by mistake and removed (history: 774dae3). Remaining: bump `vendor/origit` to latest core, cached Bob evidence for the demo commits, deploy | Tim (other session) | ~5–10 | Sat/Sun |
 | 10 | Video, slides, submit | all | 10 reserved each | Sun 12–14 |
+
+## Coin ledger (Tim's account)
+- IDE tasks T01–T06: 3.9 · Shell: T07 0.08, B01 (statements, 20 turns) ~8.8?, B03 0.15, J04 ~1.1 — exact figures in `bob_sessions/*.json` (`stats.session_costs`). Check the Bob web portal balance before Sunday; reserve 10.
 
 ## Commit recipe (Tim, after every Bob task)
 ```bash

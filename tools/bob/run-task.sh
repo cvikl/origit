@@ -25,4 +25,4 @@ json.dump(rec, open(out, "w"), indent=2, ensure_ascii=False)
 print(f"[bob] status={rec['status']} task_id={(rec['stats'] or {}).get('task_id')} cost={(rec['stats'] or {}).get('session_costs')} coins duration={(rec['stats'] or {}).get('duration_ms')} ms tool_calls={(rec['stats'] or {}).get('tool_calls')}")
 print(rec["last_message"] or open(out + ".err").read()[-2000:])
 PY
-rm -f "$OUT.raw" "$OUT.err"
+[ -s "$OUT.raw" ] && grep -q '"type":"result"' "$OUT.raw" && rm -f "$OUT.raw" "$OUT.err" || true
