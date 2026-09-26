@@ -1,4 +1,6 @@
-# Bob task list — one prompt per task, paste verbatim into Bob IDE
+# Bob task list
+
+**From 15:30 Sat: Claude runs Tim's remaining tasks headless with `tools/bob/run-task.sh` (Bob Shell, Tim's key).** Bernard and Jeremy run theirs in Bob IDE (the hackathon wants an IDE task screenshot from every member); prompts below are pasted verbatim.
 
 Rules for every task: T01 and T07+ run with `code/origit/` open as the workspace; **T02–T06 run with `code/origit-demo-payments-api/` open as the workspace** (File → Open Folder), where `origit init` installed the `origit-build` mode and hooks · use the mode named · one task per prompt ·
 when Bob finishes: **Tasks → task → click header → screenshot → `bob_sessions/<name>.png`** · then Tim runs the tests
