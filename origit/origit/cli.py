@@ -180,7 +180,8 @@ def record(stage: str) -> None:
             r["ref"] = _relativize(root, r["ref"])
             if r["kind"] == "file":
                 r["sha256"] = R.file_sha256(os.path.join(root, r["ref"]))
-        parts["wrote"] = sorted({_relativize(root, w) for w in parts["wrote"]})
+        staged = [f for f in _staged_files(root) if not f.startswith(STATE_DIR + "/")]
+        parts["wrote"] = sorted({_relativize(root, w) for w in parts["wrote"]} | (set(staged) if parts["actor"]["kind"] != "human" else set()))
         for d in _deps_from_package_json(root):
             if not any(x["name"] == d["name"] for x in parts["added_deps"]):
                 parts["added_deps"].append(d)
@@ -237,8 +238,10 @@ def session_commit(root: str) -> None:
             return
         sid = payload.get("session_id") or "unknown"
         summary = (payload.get("last_assistant_message") or "").strip()
-        first = next((l.strip(" #*-") for l in summary.splitlines() if l.strip()), "agent session")
-        first = first[:72].rstrip(".")
+        prompts = [T.unwrap(e).get("prompt") for e in T.iter_events(top) if T.unwrap(e).get("event") == "UserPromptSubmit"]
+        prompts = [p.strip() for p in prompts if isinstance(p, str) and p.strip()]
+        first = (prompts[0] if prompts else next((l.strip(" #*-") for l in summary.splitlines() if l.strip()), "agent session"))
+        first = " ".join(first.split())[:72].rstrip(".")
         body = summary[:1500]
         msg = f"bob: {first}\n\nSession {sid}. Auto-committed by Origit when the agent stopped.\n\n{body}\n"
         mode = _git(top, "config", "--get", "origit.mode") or os.environ.get("ORIGIT_MODE") or ""
