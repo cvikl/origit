@@ -1,6 +1,9 @@
 {
   "task": "origit_task_b03_demo_script",
-  "status": "unparsed",
-  "stats": null,
-  "last_message": null
+  "status": "success (stats recovered from Bob Shell log)",
+  "stats": {
+    "task_id": "4505aea3bab1d150d5e948976a8b0d8d",
+    "session_costs": 0.08714000000000001,
+    "source": "bob-shell-20260926T153502.log"
+  }
 }

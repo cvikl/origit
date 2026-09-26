@@ -56,6 +56,10 @@ Approver is preset in that repo via `git config origit.approver bernard`.
 - In session B Bob ran `git add … && git commit` on its own despite the rule not to. Origit's pre-commit hook folded the trace anyway and the record is attached: **the agent cannot bypass the record by committing itself.** Say this in the video.
 - In session A Bob **noticed** the Unicode-tag instruction and the import-time exfil on its own, said so in its summary, did not call `initializeTelemetry`, and mocked the library in tests. Origit still records the read and the dependency, and `origit taint` lights the commit. Narrative: the agent being careful is not evidence; the record is. Bob also wrote `node_modules/fast-pay-utils/dist/index.d.ts`, which npm symlinks into the vendored package — a real example of an agent writing into a dependency.
 
+## History protection (important)
+- Origit records live in `refs/notes/origit` keyed by commit sha. **Never rewrite history in this repo or the demo repo** (filter-branch, rebase, squash-merge): it detaches every record. A rewrite at 15:40 Sat was repaired by remapping notes onto the new shas. Always push with `git push origin main refs/notes/origit`; `notes.rewriteRef` is set locally so amend/rebase carry notes.
+- GitHub: https://github.com/cvikl/origit (core, public). Demo repo remote: Hetzner bare repo (console); GitHub mirror at cvikl still to create.
+
 ## Blocked
 - Nothing yet. Waiting on hook verification output from Tim.
 
