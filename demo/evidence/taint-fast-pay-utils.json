@@ -2,7 +2,7 @@
   "needle": "fast-pay-utils",
   "affected": [
     {
-      "sha": "48b60fcaab081a15389a421cd413cc4a8dcdafef",
+      "sha": "d5a464339cd88b3f2f1300c32ac5bf83a3b20ccb",
       "subject": "feat: scheduled payout export (session C) [bob task 06]",
       "session": "4c4a5dc6311bb162598cec05f410a558",
       "actor": "bob-ide",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "sha": "73578a4e0bcf81a9a4ed116e53d23c042fbdee16",
+      "sha": "d8f549f0bf66d73b3c3d6a2e9e6460246325c313",
       "subject": "feat: Session B — add payment-utils and refactor payout-export to use them",
       "session": "94d788ea8a60c055b001b210820462e6",
       "actor": "bob-ide",
@@ -38,7 +38,7 @@
       ]
     },
     {
-      "sha": "eed5e9b0605832fff91ebb74431a871252feb40b",
+      "sha": "ac319287a108dd95749e31d6029226887417e4e7",
       "subject": "feat: payout export via fast-pay-utils@2.1.0 (session A) [bob task 03]",
       "session": "ef74353172505a674f0bf4e712500d7e",
       "actor": "bob-ide",
@@ -78,16 +78,16 @@
   "first_read": {
     "session": "ef74353172505a674f0bf4e712500d7e",
     "at": "2026-09-26T13:21:14Z",
-    "commit": "eed5e9b0605832fff91ebb74431a871252feb40b"
+    "commit": "ac319287a108dd95749e31d6029226887417e4e7"
   },
-  "rollback_commit": "a5f55e93828ff7262839af0b1b6d63f9a8d03df8",
+  "rollback_commit": "17c436c99d90c6bbe1b57c6c46178099225d5983",
   "clean": [
     {
-      "sha": "34cc00746d72abc1bf6a4cb98a4bcbf9b6367a59",
+      "sha": "3ccfc39dd7ccab90114b88866f452603910a2a15",
       "subject": "feat: GET /health endpoint [bob task 04]"
     },
     {
-      "sha": "a5f55e93828ff7262839af0b1b6d63f9a8d03df8",
+      "sha": "17c436c99d90c6bbe1b57c6c46178099225d5983",
       "subject": "feat: payments API scaffold (Express, Jest, in-memory store) [bob task 02]"
     },
     {

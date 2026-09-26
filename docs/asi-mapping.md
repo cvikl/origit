@@ -15,9 +15,9 @@
 
 ---
 
-## Demo commit eed5e9b — three triggered categories
+## Demo commit ac31928 — three triggered categories
 
-Commit `eed5e9b` triggers **ASI01**, **ASI04**, and **ASI05**, as recorded in `demo/evidence/prefilter-eed5e9b.json`.
+Commit `ac31928` triggers **ASI01**, **ASI04**, and **ASI05**, as recorded in `demo/evidence/prefilter-ac31928.json`.
 
 **ASI04** fires because `rule_new_dependency` detected that the agent added `fast-pay-utils@2.1.0` from npm (`"evidence": "agent added dependency fast-pay-utils@2.1.0 (npm)"`). The package is a third-party dependency introduced without a pinned integrity hash, which is the canonical supply-chain surface: an unverified external component entering the agent's execution environment.
 

@@ -14,8 +14,8 @@ Never commit `.env` or any key file. `.gitignore` covers `.env`, `bob-*.json`, `
 | 4 | Jeremy's tainted `fast-pay-utils@2.1.0` integrated (`demo/packages/`), compiled `dist/`, clean 2.0.0 with same API | Jeremy + Tim | 0 | ✅ |
 | 5 | T01 hook verification in Bob IDE: **NATIVE** (17 events, session id + paths present, 0.28 coins) | Tim | 0.3 | ✅ |
 | 5b | Commits: T01 as bob-ide record (ec815d5), two-repo split, submodule `demo/payments-api` | Tim | 0 | ✅ |
-| 6a | T02 scaffold (a5f55e9) and T03 session A (payout export, 8 tests) — both run from the wrong workspace as follow-ups of T01; recovered by re-rooting files + trace. Coins so far: 2.61 on one task id | Tim (Bob) | 2.6 | ✅ |
-| 6b | T04 clean commit (34cc007, own task id, 0.13) ✅ · T05 session B (73578a4, 0.65) ✅ — **Bob committed by itself** via `git commit`; hooks still folded the trace, so the record has the README read and 4 writes, but no test count/mode (recipe env not set) · **T06 session C** next | Tim (Bob) | ~3 | ⏳ |
+| 6a | T02 scaffold (17c436c) and T03 session A (payout export, 8 tests) — both run from the wrong workspace as follow-ups of T01; recovered by re-rooting files + trace. Coins so far: 2.61 on one task id | Tim (Bob) | 2.6 | ✅ |
+| 6b | T04 clean commit (3ccfc39, own task id, 0.13) ✅ · T05 session B (d8f549f, 0.65) ✅ — **Bob committed by itself** via `git commit`; hooks still folded the trace, so the record has the README read and 4 writes, but no test count/mode (recipe env not set) · **T06 session C** next | Tim (Bob) | ~3 | ⏳ |
 | 6c | T07 incident summary (`docs/incident-2026-09-26.md`) — **run headless via Bob Shell** (`tools/bob/run-task.sh`), 50 s, 0.08 coins, hooks traced it, record on commit | Tim (Bob Shell) | 0.08 | ✅ |
 | 7 | J01 advisory, J02 reviewer prompt, J03 prefilter tests + rules | Jeremy (Bob) | ~8 | Sat night HK |
 | 8 | B01 statements (499 / 433 words) ✅, B03 demo script ✅, J04 ASI mapping ✅ — drafted by Bob (Shell, Tim's key, 15:32–15:37). Bernard and Jeremy now **review these in Bob IDE** (their screenshots); B02/J02 = review the console prompts in `origit-console` | Tim (Bob Shell) → Bernard, Jeremy | see ledger | ⏳ review |

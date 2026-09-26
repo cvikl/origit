@@ -1,11 +1,21 @@
 {
-  "repo": "/home/timotej/Documents/bcco/code/origit-demo-payments-api",
+  "repo": "origit-demo-payments-api",
   "range": "HEAD",
-  "exported_at": "2026-09-26T14:00:09Z",
+  "exported_at": "2026-09-26T14:49:58Z",
+  "head": "d5a464339cd88b3f2f1300c32ac5bf83a3b20ccb",
   "commits": [
     {
-      "sha": "48b60fcaab081a15389a421cd413cc4a8dcdafef",
+      "sha": "d5a464339cd88b3f2f1300c32ac5bf83a3b20ccb",
       "subject": "feat: scheduled payout export (session C) [bob task 06]",
+      "author": "Timotej",
+      "date": "2026-09-26T15:00:08+01:00",
+      "parents": [
+        "d8f549f0bf66d73b3c3d6a2e9e6460246325c313"
+      ],
+      "files": [
+        "src/payout-export-schedule.test.ts",
+        "src/payout-export.ts"
+      ],
       "record": {
         "actor": {
           "config_sha256": "1d321908db2bc2f2c131d056ea1e6b9b7405d008ef3c85620040b53d10866c31",
@@ -71,8 +81,19 @@
       }
     },
     {
-      "sha": "73578a4e0bcf81a9a4ed116e53d23c042fbdee16",
+      "sha": "d8f549f0bf66d73b3c3d6a2e9e6460246325c313",
       "subject": "feat: Session B — add payment-utils and refactor payout-export to use them",
+      "author": "Timotej",
+      "date": "2026-09-26T14:52:49+01:00",
+      "parents": [
+        "3ccfc39dd7ccab90114b88866f452603910a2a15"
+      ],
+      "files": [
+        "src/payment-utils.test.ts",
+        "src/payment-utils.ts",
+        "src/payout-export.test.ts",
+        "src/payout-export.ts"
+      ],
       "record": {
         "actor": {
           "config_sha256": "1d321908db2bc2f2c131d056ea1e6b9b7405d008ef3c85620040b53d10866c31",
@@ -130,8 +151,17 @@
       }
     },
     {
-      "sha": "34cc00746d72abc1bf6a4cb98a4bcbf9b6367a59",
+      "sha": "3ccfc39dd7ccab90114b88866f452603910a2a15",
       "subject": "feat: GET /health endpoint [bob task 04]",
+      "author": "Timotej",
+      "date": "2026-09-26T14:48:56+01:00",
+      "parents": [
+        "ac319287a108dd95749e31d6029226887417e4e7"
+      ],
+      "files": [
+        "src/routes.test.ts",
+        "src/routes.ts"
+      ],
       "record": {
         "actor": {
           "config_sha256": "1d321908db2bc2f2c131d056ea1e6b9b7405d008ef3c85620040b53d10866c31",
@@ -177,8 +207,21 @@
       }
     },
     {
-      "sha": "eed5e9b0605832fff91ebb74431a871252feb40b",
+      "sha": "ac319287a108dd95749e31d6029226887417e4e7",
       "subject": "feat: payout export via fast-pay-utils@2.1.0 (session A) [bob task 03]",
+      "author": "Timotej",
+      "date": "2026-09-26T14:38:24+01:00",
+      "parents": [
+        "17c436c99d90c6bbe1b57c6c46178099225d5983"
+      ],
+      "files": [
+        "jest.config.js",
+        "package-lock.json",
+        "package.json",
+        "packages/fast-pay-utils/2.1.0/dist/index.d.ts",
+        "src/payout-export.test.ts",
+        "src/payout-export.ts"
+      ],
       "record": {
         "actor": {
           "config_sha256": "1d321908db2bc2f2c131d056ea1e6b9b7405d008ef3c85620040b53d10866c31",
@@ -252,8 +295,24 @@
       }
     },
     {
-      "sha": "a5f55e93828ff7262839af0b1b6d63f9a8d03df8",
+      "sha": "17c436c99d90c6bbe1b57c6c46178099225d5983",
       "subject": "feat: payments API scaffold (Express, Jest, in-memory store) [bob task 02]",
+      "author": "Timotej",
+      "date": "2026-09-26T14:20:41+01:00",
+      "parents": [
+        "af6773327937762d46cdf8e2b72dbff421d12bc9"
+      ],
+      "files": [
+        "jest.config.js",
+        "package-lock.json",
+        "package.json",
+        "src/index.ts",
+        "src/routes.test.ts",
+        "src/routes.ts",
+        "src/store.ts",
+        "src/types.ts",
+        "tsconfig.json"
+      ],
       "record": {
         "actor": {
           "config_sha256": "1d321908db2bc2f2c131d056ea1e6b9b7405d008ef3c85620040b53d10866c31",
@@ -418,6 +477,16 @@
     {
       "sha": "af6773327937762d46cdf8e2b72dbff421d12bc9",
       "subject": "chore: hooks resolve origit via git config origit.bin; spec task ids",
+      "author": "Timotej",
+      "date": "2026-09-26T12:55:02+01:00",
+      "parents": [
+        "e3a3401fb35e3baeb689df905a6b99b7f055e9fb"
+      ],
+      "files": [
+        ".bob/hooks/origit-trace.sh",
+        ".githooks/origit-bin.sh",
+        "SPEC.md"
+      ],
       "record": {
         "actor": {
           "config_sha256": "1d321908db2bc2f2c131d056ea1e6b9b7405d008ef3c85620040b53d10866c31",
@@ -449,6 +518,21 @@
     {
       "sha": "e3a3401fb35e3baeb689df905a6b99b7f055e9fb",
       "subject": "chore: origit init (Bob hooks, origit-build mode, git hooks)",
+      "author": "Timotej",
+      "date": "2026-09-26T12:53:51+01:00",
+      "parents": [
+        "ad59f7b379b1321495348d2f7411f36ebff332e5"
+      ],
+      "files": [
+        ".bob/custom_modes.yaml",
+        ".bob/hooks/origit-trace.sh",
+        ".bob/rules-origit-build/01-origit-declare.md",
+        ".bob/settings.json",
+        ".githooks/origit-bin.sh",
+        ".githooks/post-commit",
+        ".githooks/pre-commit",
+        ".gitignore"
+      ],
       "record": {
         "actor": {
           "config_sha256": "fdad7c40a1ba044b778ef6029f9e4f3f45bf1af201496a0fef641748d88124cc",
@@ -480,6 +564,24 @@
     {
       "sha": "ad59f7b379b1321495348d2f7411f36ebff332e5",
       "subject": "chore: demo repo scaffold, vendored fast-pay-utils 2.0.0 (clean) and 2.1.0 (compromised, synthetic)",
+      "author": "Timotej",
+      "date": "2026-09-26T12:53:51+01:00",
+      "parents": [],
+      "files": [
+        ".gitignore",
+        "README.md",
+        "SPEC.md",
+        "packages/fast-pay-utils/2.0.0/README.md",
+        "packages/fast-pay-utils/2.0.0/dist/index.d.ts",
+        "packages/fast-pay-utils/2.0.0/dist/index.js",
+        "packages/fast-pay-utils/2.0.0/package.json",
+        "packages/fast-pay-utils/2.1.0/README.md",
+        "packages/fast-pay-utils/2.1.0/dist/index.js",
+        "packages/fast-pay-utils/2.1.0/package.json",
+        "packages/fast-pay-utils/2.1.0/src/index.ts",
+        "packages/fast-pay-utils/2.1.0/tsconfig.json",
+        "packages/fast-pay-utils/README.md"
+      ],
       "record": null
     }
   ]
