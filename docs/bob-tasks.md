@@ -1,6 +1,6 @@
 # Bob task list
 
-**From 15:30 Sat: Claude runs Tim's remaining tasks headless with `tools/bob/run-task.sh` (Bob Shell, Tim's key).** Bernard and Jeremy run theirs in Bob IDE (the hackathon wants an IDE task screenshot from every member); prompts below are pasted verbatim.
+**From 15:30 Sat: Tim's remaining tasks run headless with `tools/bob/run-task.sh` (Bob Shell, Tim's key).** Bernard and Jeremy run theirs in Bob IDE (the hackathon wants an IDE task screenshot from every member); prompts below are pasted verbatim.
 
 Rules for every task: T01 and T07+ run with `code/origit/` open as the workspace; **T02–T06 run with `code/origit-demo-payments-api/` open as the workspace** (File → Open Folder), where `origit init` installed the `origit-build` mode and hooks · use the mode named · one task per prompt ·
 when Bob finishes: **Tasks → task → click header → screenshot → `bob_sessions/<name>.png`** · then Tim runs the tests
@@ -42,7 +42,7 @@ Screenshots always go to `code/origit/bob_sessions/`.
 
 | id | Mode | Screenshot | Est. | Prompt |
 |---|---|---|---|---|
-| B01 ✅ drafted by Bob Shell (`bob_sessions/origit_task_b01_statements.json`); Bernard: open in Bob IDE, Ask mode, "Review docs/problem-solution-statement.md and docs/bob-usage-statement.md against docs/positioning.md; tighten wording; keep ≤500 words" | Ask | `origit_task_b01_problem_solution.png` | 1–2 | Attach `ORIGIT_CLAUDE_CODE_BRIEF.md` §1–2 and `docs/cra-article-14.md`. Draft `docs/problem-solution-statement.md` (≤500 words) and `docs/bob-usage-statement.md` (≤500 words) using the "say / never say" list in brief §7. |
+| B01 ✅ drafted by Bob Shell (`bob_sessions/origit_task_b01_statements.json`); Bernard: open in Bob IDE, Ask mode, "Review docs/problem-solution-statement.md and docs/bob-usage-statement.md against docs/positioning.md; tighten wording; keep ≤500 words" | Ask | `origit_task_b01_problem_solution.png` | 1–2 | Attach the project brief §1–2 and `docs/cra-article-14.md`. Draft `docs/problem-solution-statement.md` (≤500 words) and `docs/bob-usage-statement.md` (≤500 words) using the "say / never say" list in brief §7. |
 | B02 | Ask | `origit_task_b02_art14_drafter_prompt.png` | 2–3 | Attach `docs/cra-article-14.md` and a sample `origit taint --json` output. Review and improve `origit-console/prompts/art14-early-warning.md` (open `code/origit-console` as the workspace): the prompt, given a taint result JSON, drafts the Article 14(4)(a) early warning (product, awareness time, affected components, malicious-code indication, member states placeholder, corrective measure = rollback commit). Include the expected output template. |
 | B03 ✅ drafted by Bob Shell; Bernard reviews narration in Bob IDE | Ask | `origit_task_b03_demo_script.png` | 1 | Turn "Revised Demo Story" into `docs/demo-script.md`: ≤3 min, ≥90 s of the console/CLI on screen, shot list with timings, narration text, the closing line. |
 | B04 | — | reviewer runs | 10 reserved | Sunday: his `BOB_API_KEY` powers `bob run` reviewer + drafter for the recorded demo. |

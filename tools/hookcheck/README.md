@@ -12,4 +12,4 @@ Question: do Bob IDE hooks fire on file reads, and does the stdin payload carry 
 3. Start a new task in **Agent** mode and paste exactly:
    > Read a.ts and b.ts, then change b.ts so it exports 3 instead of 2. Then run `ls` in the terminal. Do not ask questions.
 4. When Bob finishes: Tasks → the task → click header → **screenshot** → save as `bob_sessions/origit_task01_hook_verification.png`.
-5. Run `python3 <repo>/tools/hookcheck/analyse.py /tmp/hookcheck/.origit/trace.jsonl` and paste the output (and the first ~10 lines of `.origit/trace.jsonl`) back to Claude Code.
+5. Run `python3 <repo>/tools/hookcheck/analyse.py /tmp/hookcheck/.origit/trace.jsonl` and check the output (and the first ~10 lines of `.origit/trace.jsonl`).
