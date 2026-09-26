@@ -1,0 +1,20 @@
+3 commits affected
+Sessions: 4c4a5dc6311bb162598cec05f410a558, 94d788ea8a60c055b001b210820462e6, ef74353172505a674f0bf4e712500d7e
+Files: jest.config.js, node_modules/fast-pay-utils/dist/index.d.ts, src/payment-utils.test.ts, src/payment-utils.ts, src/payout-export-schedule.test.ts, src/payout-export.test.ts, src/payout-export.ts
+Approver: bernard (2026-09-26 14:00 UTC)
+First read: ef74353172505a674f0bf4e712500d7e, 2026-09-26 13:21 UTC
+Roll back to: commit a5f55e9
+
+  48b60fc  4c4a5dc6311bb162598cec05f410a558 feat: scheduled payout export (session C) [bob task 06]
+           ↳ propagated:src/payment-utils.ts
+           ↳ propagated:src/payout-export.test.ts
+           ↳ propagated:src/payout-export.ts
+  73578a4  94d788ea8a60c055b001b210820462e6 feat: Session B — add payment-utils and refactor payout-export to use them
+           ↳ read:file:node_modules/fast-pay-utils/README.md
+           ↳ propagated:src/payout-export.test.ts
+           ↳ propagated:src/payout-export.ts
+  eed5e9b  ef74353172505a674f0bf4e712500d7e feat: payout export via fast-pay-utils@2.1.0 (session A) [bob task 03]
+           ↳ added_deps:fast-pay-utils@2.1.0
+           ↳ read:file:node_modules/fast-pay-utils/**/*
+           ↳ read:file:node_modules/fast-pay-utils/README.md
+           ↳ read:pkg:fast-pay-utils@2.1.0

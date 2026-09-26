@@ -1,0 +1,106 @@
+{
+  "needle": "fast-pay-utils",
+  "affected": [
+    {
+      "sha": "48b60fcaab081a15389a421cd413cc4a8dcdafef",
+      "subject": "feat: scheduled payout export (session C) [bob task 06]",
+      "session": "4c4a5dc6311bb162598cec05f410a558",
+      "actor": "bob-ide",
+      "approver": "bernard",
+      "approved_at": "2026-09-26T14:00:08Z",
+      "wrote": [
+        "src/payout-export-schedule.test.ts",
+        "src/payout-export.ts"
+      ],
+      "matched": [
+        "propagated:src/payment-utils.ts",
+        "propagated:src/payout-export.test.ts",
+        "propagated:src/payout-export.ts"
+      ]
+    },
+    {
+      "sha": "73578a4e0bcf81a9a4ed116e53d23c042fbdee16",
+      "subject": "feat: Session B — add payment-utils and refactor payout-export to use them",
+      "session": "94d788ea8a60c055b001b210820462e6",
+      "actor": "bob-ide",
+      "approver": "bernard",
+      "approved_at": "2026-09-26T13:52:50Z",
+      "wrote": [
+        "src/payment-utils.test.ts",
+        "src/payment-utils.ts",
+        "src/payout-export.test.ts",
+        "src/payout-export.ts"
+      ],
+      "matched": [
+        "read:file:node_modules/fast-pay-utils/README.md",
+        "propagated:src/payout-export.test.ts",
+        "propagated:src/payout-export.ts"
+      ]
+    },
+    {
+      "sha": "eed5e9b0605832fff91ebb74431a871252feb40b",
+      "subject": "feat: payout export via fast-pay-utils@2.1.0 (session A) [bob task 03]",
+      "session": "ef74353172505a674f0bf4e712500d7e",
+      "actor": "bob-ide",
+      "approver": "bernard",
+      "approved_at": "2026-09-26T13:38:24Z",
+      "wrote": [
+        "jest.config.js",
+        "node_modules/fast-pay-utils/dist/index.d.ts",
+        "src/payout-export.test.ts",
+        "src/payout-export.ts"
+      ],
+      "matched": [
+        "added_deps:fast-pay-utils@2.1.0",
+        "read:file:node_modules/fast-pay-utils/**/*",
+        "read:file:node_modules/fast-pay-utils/README.md",
+        "read:pkg:fast-pay-utils@2.1.0"
+      ]
+    }
+  ],
+  "sessions": [
+    "4c4a5dc6311bb162598cec05f410a558",
+    "94d788ea8a60c055b001b210820462e6",
+    "ef74353172505a674f0bf4e712500d7e"
+  ],
+  "files_written": [
+    "jest.config.js",
+    "node_modules/fast-pay-utils/dist/index.d.ts",
+    "src/payment-utils.test.ts",
+    "src/payment-utils.ts",
+    "src/payout-export-schedule.test.ts",
+    "src/payout-export.test.ts",
+    "src/payout-export.ts"
+  ],
+  "approvers": [
+    "bernard"
+  ],
+  "first_read": {
+    "session": "ef74353172505a674f0bf4e712500d7e",
+    "at": "2026-09-26T13:21:14Z",
+    "commit": "eed5e9b0605832fff91ebb74431a871252feb40b"
+  },
+  "rollback_commit": "a5f55e93828ff7262839af0b1b6d63f9a8d03df8",
+  "clean": [
+    {
+      "sha": "34cc00746d72abc1bf6a4cb98a4bcbf9b6367a59",
+      "subject": "feat: GET /health endpoint [bob task 04]"
+    },
+    {
+      "sha": "a5f55e93828ff7262839af0b1b6d63f9a8d03df8",
+      "subject": "feat: payments API scaffold (Express, Jest, in-memory store) [bob task 02]"
+    },
+    {
+      "sha": "af6773327937762d46cdf8e2b72dbff421d12bc9",
+      "subject": "chore: hooks resolve origit via git config origit.bin; spec task ids"
+    },
+    {
+      "sha": "e3a3401fb35e3baeb689df905a6b99b7f055e9fb",
+      "subject": "chore: origit init (Bob hooks, origit-build mode, git hooks)"
+    },
+    {
+      "sha": "ad59f7b379b1321495348d2f7411f36ebff332e5",
+      "subject": "chore: demo repo scaffold, vendored fast-pay-utils 2.0.0 (clean) and 2.1.0 (compromised, synthetic)"
+    }
+  ]
+}

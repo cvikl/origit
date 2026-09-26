@@ -1,0 +1,38 @@
+{
+  "commit": "e3a3401fb35e3baeb689df905a6b99b7f055e9fb",
+  "needs_review": true,
+  "findings": [
+    {
+      "asi": "ASI01",
+      "title": "Agent Goal Hijack",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent configuration file changed in this commit: .bob/custom_modes.yaml",
+      "ref": ".bob/custom_modes.yaml"
+    },
+    {
+      "asi": "ASI01",
+      "title": "Agent Goal Hijack",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent configuration file changed in this commit: .bob/hooks/origit-trace.sh",
+      "ref": ".bob/hooks/origit-trace.sh"
+    },
+    {
+      "asi": "ASI01",
+      "title": "Agent Goal Hijack",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent configuration file changed in this commit: .bob/rules-origit-build/01-origit-declare.md",
+      "ref": ".bob/rules-origit-build/01-origit-declare.md"
+    },
+    {
+      "asi": "ASI01",
+      "title": "Agent Goal Hijack",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent configuration file changed in this commit: .bob/settings.json",
+      "ref": ".bob/settings.json"
+    }
+  ]
+}

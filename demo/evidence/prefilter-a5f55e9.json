@@ -1,0 +1,86 @@
+{
+  "commit": "a5f55e93828ff7262839af0b1b6d63f9a8d03df8",
+  "needs_review": true,
+  "findings": [
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "low",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency @types/express@4.17.21 (npm)",
+      "ref": "@types/express@4.17.21"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "low",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency @types/jest@29.5.14 (npm)",
+      "ref": "@types/jest@29.5.14"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "low",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency @types/node@22.10.2 (npm)",
+      "ref": "@types/node@22.10.2"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "low",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency @types/supertest@6.0.2 (npm)",
+      "ref": "@types/supertest@6.0.2"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "low",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency express@4.21.2 (npm)",
+      "ref": "express@4.21.2"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "low",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency jest@29.7.0 (npm)",
+      "ref": "jest@29.7.0"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "low",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency supertest@7.0.0 (npm)",
+      "ref": "supertest@7.0.0"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "low",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency ts-jest@29.2.5 (npm)",
+      "ref": "ts-jest@29.2.5"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "low",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency typescript@5.6.3 (npm)",
+      "ref": "typescript@5.6.3"
+    },
+    {
+      "asi": "ASI05",
+      "title": "Unexpected Code Execution (RCE)",
+      "severity": "informational",
+      "cwe": "CWE-94",
+      "evidence": "agent executed 2 shell command(s): npm install; npm test",
+      "ref": null
+    }
+  ]
+}
