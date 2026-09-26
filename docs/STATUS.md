@@ -15,7 +15,7 @@ Never commit `.env` or any key file. `.gitignore` covers `.env`, `bob-*.json`, `
 | 5 | T01 hook verification in Bob IDE: **NATIVE** (17 events, session id + paths present, 0.28 coins) | Tim | 0.3 | ✅ |
 | 5b | Commits: T01 as bob-ide record (ec815d5), two-repo split, submodule `demo/payments-api` | Claude | 0 | ✅ |
 | 6a | T02 scaffold (a5f55e9) and T03 session A (payout export, 8 tests) — both run from the wrong workspace as follow-ups of T01; recovered by re-rooting files + trace. Coins so far: 2.61 on one task id | Tim (Bob) + Claude | 2.6 | ✅ |
-| 6b | **T04 clean commit, T05 session B, T06 session C** — workspace `origit-demo-payments-api`, New Task each, mode Origit Build | Tim (Bob) | ~6–8 | ⏳ now |
+| 6b | T04 clean commit (34cc007, own task id, 0.13) ✅ · T05 session B (73578a4, 0.65) ✅ — **Bob committed by itself** via `git commit`; hooks still folded the trace, so the record has the README read and 4 writes, but no test count/mode (recipe env not set) · **T06 session C** next | Tim (Bob) | ~3 | ⏳ |
 | 6c | T07 incident summary | Tim (Bob) | 2 | after 6b |
 | 7 | J01 advisory, J02 reviewer prompt, J03 prefilter tests + rules | Jeremy (Bob) | ~8 | Sat night HK |
 | 8 | B01 statements, B02 Art.14 drafter prompt, B03 demo script | Bernard (Bob) | ~7 | Sat |
@@ -48,6 +48,7 @@ Approver is preset in that repo via `git config origit.approver bernard`.
 - Tests: `cd origit && env -u PYTHONPATH PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/python -m pytest -q` (Tim's machine has ROS on PYTHONPATH which breaks plain pytest).
 
 ## Observations for the video
+- In session B Bob ran `git add … && git commit` on its own despite the rule not to. Origit's pre-commit hook folded the trace anyway and the record is attached: **the agent cannot bypass the record by committing itself.** Say this in the video.
 - In session A Bob **noticed** the Unicode-tag instruction and the import-time exfil on its own, said so in its summary, did not call `initializeTelemetry`, and mocked the library in tests. Origit still records the read and the dependency, and `origit taint` lights the commit. Narrative: the agent being careful is not evidence; the record is. Bob also wrote `node_modules/fast-pay-utils/dist/index.d.ts`, which npm symlinks into the vendored package — a real example of an agent writing into a dependency.
 
 ## Blocked
