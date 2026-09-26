@@ -1,0 +1,36 @@
+# secrets — NEVER commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+bob-*.json
+apikey*
+
+# origit runtime state (the trace is folded into git notes, never committed as a file)
+.origit/trace.jsonl
+.origit/pending-record.json
+.origit/*.log
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+origit/dist/
+origit/build/
+.pytest_cache/
+
+# node
+node_modules/
+.next/
+console/**/dist/
+*.tsbuildinfo
+# demo packages ship their compiled dist on purpose (local file: deps)
+!demo/packages/**/dist/
+
+# editors / os
+.vscode/
+.idea/
+.DS_Store
