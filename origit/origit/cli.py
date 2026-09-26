@@ -72,6 +72,7 @@ def init(force: bool) -> None:
     exe = shutil.which("origit") or sys.argv[0]
     if exe and os.path.isabs(exe):
         subprocess.run(["git", "-C", root, "config", "origit.bin", exe], check=False)
+    subprocess.run(["git", "-C", root, "config", "origit.autocommit", "true"], check=False)
     os.makedirs(os.path.join(root, STATE_DIR), exist_ok=True)
     gi = os.path.join(root, ".gitignore")
     line = f"{STATE_DIR}/trace.jsonl"
@@ -212,6 +213,44 @@ def record(stage: str) -> None:
         os.remove(pending)
         T.clear(root)
         click.echo(f"origit: record {rec['record_sha256'][:12]} attached to {sha[:7]} (refs/notes/origit)")
+
+
+# ----------------------------------------------------------------------------- session-commit
+@main.command("session-commit")
+@click.option("--root", default=".")
+def session_commit(root: str) -> None:
+    """Stop-hook consumer: when a Bob session ends, commit what it changed so one session = one commit = one record.
+
+    Reads the Stop payload on stdin (session_id, last_assistant_message). Enabled per repo with
+    ``git config origit.autocommit true``. Stages everything except Origit state, skips if nothing changed,
+    writes the commit message from Bob's own summary, and lets the pre/post-commit hooks seal the record.
+    Always exits 0 so it never blocks Bob.
+    """
+    try:
+        payload = T.read_stdin_payload() or {}
+        top = N.toplevel(root)
+        if (_git(top, "config", "--get", "origit.autocommit") or "").lower() not in ("true", "1", "yes"):
+            return
+        subprocess.run(["git", "-C", top, "add", "-A", "--", ".", f":(exclude){STATE_DIR}"], check=False, capture_output=True)
+        if subprocess.run(["git", "-C", top, "diff", "--cached", "--quiet"]).returncode == 0:
+            click.echo("origit: session ended, nothing to commit", err=True)
+            return
+        sid = payload.get("session_id") or "unknown"
+        summary = (payload.get("last_assistant_message") or "").strip()
+        first = next((l.strip(" #*-") for l in summary.splitlines() if l.strip()), "agent session")
+        first = first[:72].rstrip(".")
+        body = summary[:1500]
+        msg = f"bob: {first}\n\nSession {sid}. Auto-committed by Origit when the agent stopped.\n\n{body}\n"
+        mode = _git(top, "config", "--get", "origit.mode") or os.environ.get("ORIGIT_MODE") or ""
+        env = {**os.environ, "ORIGIT_MODE": mode} if mode else dict(os.environ)
+        p = subprocess.run(["git", "-C", top, "commit", "-q", "-F", "-"], input=msg, text=True, env=env, capture_output=True)
+        if p.returncode == 0:
+            click.echo(f"origit: session {sid[:8]} committed as {N.head(top)[:7]}", err=True)
+        else:
+            click.echo(f"origit: session commit failed: {p.stderr[-300:]}", err=True)
+    except Exception as exc:  # noqa: BLE001
+        click.echo(f"origit session-commit: {exc}", err=True)
+    sys.exit(0)
 
 
 # ----------------------------------------------------------------------------- log / show

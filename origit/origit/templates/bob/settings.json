@@ -1,16 +1,55 @@
 {
   "hooks": {
     "SessionStart": [
-      { "hooks": [ { "type": "command", "command": "sh .bob/hooks/origit-trace.sh", "timeout": 5 } ] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh .bob/hooks/origit-trace.sh",
+            "timeout": 5
+          }
+        ]
+      }
     ],
     "PreToolUse": [
-      { "matcher": ".*", "hooks": [ { "type": "command", "command": "sh .bob/hooks/origit-trace.sh", "timeout": 5 } ] }
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh .bob/hooks/origit-trace.sh",
+            "timeout": 5
+          }
+        ]
+      }
     ],
     "PostToolUse": [
-      { "matcher": ".*", "hooks": [ { "type": "command", "command": "sh .bob/hooks/origit-trace.sh", "timeout": 5 } ] }
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh .bob/hooks/origit-trace.sh",
+            "timeout": 5
+          }
+        ]
+      }
     ],
     "Stop": [
-      { "hooks": [ { "type": "command", "command": "sh .bob/hooks/origit-trace.sh", "timeout": 5 } ] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh .bob/hooks/origit-trace.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "sh .bob/hooks/origit-session-commit.sh",
+            "timeout": 90
+          }
+        ]
+      }
     ]
   }
 }
