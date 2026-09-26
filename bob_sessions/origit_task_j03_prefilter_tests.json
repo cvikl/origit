@@ -1,0 +1,12 @@
+{
+  "task": "origit_task_j03_prefilter_tests",
+  "status": "success",
+  "stats": {
+    "task_id": "547e9eea5519075347a9056969efae47",
+    "duration_ms": 145372,
+    "session_costs": 0.7928179999999999,
+    "max_cost": 1.2,
+    "tool_calls": 18
+  },
+  "last_message": "All 60 tests pass (26 new prefilter + 34 pre-existing). Here's a summary of what was done:\n\n---\n\n**`origit/tests/test_prefilter.py`** — 26 tests covering:\n- [`rule_new_dependency`](origit/origit/prefilter.py:75): fires on dep, empty → no findings\n- [`rule_external_read`](origit/origit/prefilter.py:82): URL fires, MCP fires, file kind ignored\n- [`rule_commands`](origit/origit/prefilter.py:89): fires with commands, empty → no findings\n- [`rule_agent_config_changed`](origit/origit/prefilter.py:96): `AGENTS.md` fires, `.bob/` fires, non-config paths ignored\n- [`rule_hidden_text`](origit/origit/prefilter.py:103): Unicode-tag smuggled sentence built from ASCII (+0xE0000) — decoded sentence appears in evidence; zero-width; bidi; clean text ignored\n- [`rule_secrets_touched`](origit/origit/prefilter.py:117): `.env` wrote, `.pem` changed, `id_rsa` read, non-secret ignored\n- [`rule_dependency_not_read`](origit/origit/prefilter.py:121): fires when no docs read, suppressed by matching file ref, suppressed by URL containing name, empty deps\n- [`run()`](origit/origit/prefilter.py:144): sorted by severity descending, empty record → no findings\n- [`needs_review()`](origit/origit/prefilter.py:151): `False` for empty list, `True` when findings present\n\n**`origit/origit/prefilter.py`** — added:\n- `rule_dependency_not_read`: emits `ASI04 medium CWE-829` for each `added_deps` entry whose `name` doesn't appear in any `read` ref of kind `file` or `url`\n- Registered in `RULES`\n- Docstring updated with the new trigger line\n\n---\n\n**Origit declaration**\nread: `AGENTS.md`, `origit/origit/prefilter.py`, `origit/tests/test_record.py`\nwrote: `origit/tests/test_prefilter.py`, `origit/origit/prefilter.py`\nadded_deps: none\ncommands: `cat > origit/tests/test_prefilter.py`, `python3 - (sed script for prefilter.py)`, `pytest -q`, `pytest -v tests/test_prefilter.py`"
+}

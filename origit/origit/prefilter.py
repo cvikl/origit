@@ -5,6 +5,7 @@ Bob is only asked to write ASI evidence when at least one trigger fires.
 
 Triggers (each returns a Finding {asi, severity, cwe, evidence, ref}):
   * new dependency present (added_deps non-empty)              -> ASI04 low, CWE-829
+  * dependency added without reading its docs                  -> ASI04 medium, CWE-829
   * external read present (read.kind in url|mcp)                -> ASI01 informational, CWE-829
   * command executed (commands non-empty)                       -> ASI05 informational, CWE-94
   * agent config changed (.bob/, CLAUDE.md, AGENTS.md, rules, skills) -> ASI01 medium, CWE-829
@@ -119,7 +120,26 @@ def rule_secrets_touched(record: dict[str, Any], changed_files: list[str], *_: A
     return [_f("ASI03", "medium", "CWE-200", f"secret or credential file touched: {p}", p) for p in sorted(set(paths)) if SECRET_PATH_RE.search(p)]
 
 
-RULES = [rule_new_dependency, rule_external_read, rule_commands, rule_agent_config_changed, rule_hidden_text, rule_secrets_touched]
+
+def rule_dependency_not_read(record: dict[str, Any], *_: Any) -> list[dict[str, Any]]:
+    """ASI04 medium — agent added a dependency without reading any of its documentation.
+
+    Suppressed when the dep name appears in any read ref of kind ``file``
+    (e.g. node_modules/<name>/README.md) or kind ``url``.
+    """
+    read_refs = [r["ref"] for r in record.get("read", []) if r.get("kind") in ("file", "url")]
+    out = []
+    for d in record.get("added_deps", []):
+        name = d["name"]
+        if not any(name in ref for ref in read_refs):
+            out.append(_f(
+                "ASI04", "medium", "CWE-829",
+                f"agent added dependency {name}@{d.get('version')} without reading its documentation",
+                f"{name}@{d.get('version')}",
+            ))
+    return out
+
+RULES = [rule_new_dependency, rule_external_read, rule_commands, rule_agent_config_changed, rule_hidden_text, rule_secrets_touched, rule_dependency_not_read]
 
 
 def run(record: dict[str, Any], changed_files: list[str] | None = None, read_texts: dict[str, str] | None = None) -> list[dict[str, Any]]:
