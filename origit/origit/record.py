@@ -15,6 +15,7 @@ Canonical form (this is what gets hashed and stored):
     record *without* the ``record_sha256`` key itself.
 
 A record is immutable evidence: change one byte and ``verify()`` fails.
+Verified live on Bob IDE 2026-09-26.
 """
 
 from __future__ import annotations
