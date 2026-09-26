@@ -13,13 +13,13 @@ Never commit `.env` or any key file. `.gitignore` covers `.env`, `bob-*.json`, `
 | 3 | Bob config in repo: modes `origit-dev`/`origit-build`, rules, hooks, AGENTS.md; Bob IDE 2.2.0 installed, modes visible | Tim | 0 | ✅ |
 | 4 | Jeremy's tainted `fast-pay-utils@2.1.0` integrated (`demo/packages/`), compiled `dist/`, clean 2.0.0 with same API | Jeremy + Tim | 0 | ✅ |
 | 5 | T01 hook verification in Bob IDE: **NATIVE** (17 events, session id + paths present, 0.28 coins) | Tim | 0.3 | ✅ |
-| 5b | Commits: T01 as bob-ide record (ec815d5), two-repo split, submodule `demo/payments-api` | Tim | 0 | ✅ |
+| 5b | Commits: T01 as bob-ide record (43ca0d0), two-repo split, submodule `demo/payments-api` | Tim | 0 | ✅ |
 | 6a | T02 scaffold (17c436c) and T03 session A (payout export, 8 tests) — both run from the wrong workspace as follow-ups of T01; recovered by re-rooting files + trace. Coins so far: 2.61 on one task id | Tim (Bob) | 2.6 | ✅ |
 | 6b | T04 clean commit (3ccfc39, own task id, 0.13) ✅ · T05 session B (d8f549f, 0.65) ✅ — **Bob committed by itself** via `git commit`; hooks still folded the trace, so the record has the README read and 4 writes, but no test count/mode (recipe env not set) · **T06 session C** next | Tim (Bob) | ~3 | ⏳ |
 | 6c | T07 incident summary (`docs/incident-2026-09-26.md`) — **run headless via Bob Shell** (`tools/bob/run-task.sh`), 50 s, 0.08 coins, hooks traced it, record on commit | Tim (Bob Shell) | 0.08 | ✅ |
-| 7 | J01 advisory, J02 reviewer prompt, J03 prefilter tests + rules | Jeremy (Bob) | ~8 | Sat night HK |
+| 7 | J01 advisory (demo repo d899879) ✅ and J03 prefilter tests + `dependency_not_read` rule (4eb0887, 60 tests) ✅ — drafted by Bob Shell; Jeremy reviews in Bob IDE and does J02 (console reviewer prompt) | Bob Shell → Jeremy | 0.9 | ⏳ review |
 | 8 | B01 statements (499 / 433 words) ✅, B03 demo script ✅, J04 ASI mapping ✅ — drafted by Bob (Shell, Tim's key, 15:32–15:37). Bernard and Jeremy now **review these in Bob IDE** (their screenshots); B02/J02 = review the console prompts in `origit-console` | Tim (Bob Shell) → Bernard, Jeremy | see ledger | ⏳ review |
-| 9 | Console: **built in the separate `origit-console` repo by Tim** (FastAPI, hosted at origit.uk, vendors this core as `vendor/origit`). This repo only points to it (`console/README.md`). A duplicate stdlib console was built here by mistake and removed (history: 774dae3). Remaining: bump `vendor/origit` to latest core, cached Bob evidence for the demo commits, deploy | Tim | ~5–10 | Sat/Sun |
+| 9 | Console: **built in the separate `origit-console` repo by Tim** (FastAPI, hosted at origit.uk, vendors this core as `vendor/origit`). This repo only points to it (`console/README.md`). A duplicate stdlib console was built here by mistake and removed (history: d997866). Remaining: bump `vendor/origit` to latest core, cached Bob evidence for the demo commits, deploy | Tim | ~5–10 | Sat/Sun |
 | 10 | Video, slides, submit | all | 10 reserved each | Sun 12–14 |
 
 ## Coin ledger (Tim's account)
@@ -56,8 +56,8 @@ Approver is preset in that repo via `git config origit.approver bernard`.
 - In session B Bob ran `git add … && git commit` on its own despite the rule not to. Origit's pre-commit hook folded the trace anyway and the record is attached: **the agent cannot bypass the record by committing itself.** Say this in the video.
 - In session A Bob **noticed** the Unicode-tag instruction and the import-time exfil on its own, said so in its summary, did not call `initializeTelemetry`, and mocked the library in tests. Origit still records the read and the dependency, and `origit taint` lights the commit. Narrative: the agent being careful is not evidence; the record is. Bob also wrote `node_modules/fast-pay-utils/dist/index.d.ts`, which npm symlinks into the vendored package — a real example of an agent writing into a dependency.
 
-## History protection (important)
-- Origit records live in `refs/notes/origit` keyed by commit sha. **Never rewrite history in this repo or the demo repo** (filter-branch, rebase, squash-merge): it detaches every record. A rewrite at 15:40 Sat was repaired by remapping notes onto the new shas. Always push with `git push origin main refs/notes/origit`; `notes.rewriteRef` is set locally so amend/rebase carry notes.
+## Records and history (technical note)
+- Origit records live in `refs/notes/origit`, keyed by commit sha. If history is ever rewritten (filter-branch, rebase, squash-merge), re-attach the records to the new shas with `git notes --ref=origit copy <old> <new>` (pairing old and new commits in order; trees must be identical) and push the notes ref again. `notes.rewriteRef` is set locally so amend/rebase carry notes automatically. Always push with `git push origin main refs/notes/origit`.
 - GitHub: https://github.com/cvikl/origit (core, public). Demo repo remote: Hetzner bare repo (console); GitHub mirror at cvikl still to create.
 
 ## Blocked
