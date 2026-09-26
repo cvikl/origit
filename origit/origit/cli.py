@@ -190,7 +190,7 @@ def record(stage: str) -> None:
             parts["session"] = {"id": f"human:{author}:{now}", "started_at": now, "ended_at": now}
         parts["actor"]["mode"] = os.environ.get("ORIGIT_MODE") or None
         parts["actor"]["config_sha256"] = _config_sha256(root)
-        tests = {"run": False, "passed": 0, "failed": 0}
+        tests = T.tests_from_events(events)
         if os.environ.get("ORIGIT_TESTS"):
             try:
                 tests.update(json.loads(os.environ["ORIGIT_TESTS"]))

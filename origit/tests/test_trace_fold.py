@@ -86,3 +86,13 @@ def test_live_bob_ide_schema_is_normalised():
     assert [(x["kind"], x["ref"]) for x in r["read"]] == [("file", "origit/origit/trace.py"), ("file", "**/record.py")]
     assert r["wrote"] == ["origit/origit/record.py"]
     assert r["commands"] == ["ls origit/origit"]
+
+
+def test_tests_from_events_jest_and_pytest():
+    jest = "…\nTest Suites: 3 passed, 3 total\nTests:       1 failed, 22 passed, 23 total\nSnapshots: 0 total\n"
+    ev_j = {"hook_event_name": "PostToolUse", "session_id": "s", "tool_name": "execute_command", "tool_input": {"command": "npm test"}, "tool_response": jest, "ts": "2026-09-26T16:00:00Z"}
+    assert T.tests_from_events([ev_j]) == {"run": True, "passed": 22, "failed": 1}
+    py = "....F\n1 failed, 4 passed in 0.12s\n"
+    ev_p = {"hook_event_name": "PostToolUse", "session_id": "s", "tool_name": "execute_command", "tool_input": {"command": "pytest -q"}, "tool_response": py, "ts": "2026-09-26T16:00:01Z"}
+    assert T.tests_from_events([ev_p]) == {"run": True, "passed": 4, "failed": 1}
+    assert T.tests_from_events([{"hook_event_name": "PostToolUse", "session_id": "s", "tool_name": "execute_command", "tool_input": {"command": "ls"}, "tool_response": "a", "ts": "x"}]) == {"run": False, "passed": 0, "failed": 0}

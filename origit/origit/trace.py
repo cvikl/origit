@@ -54,7 +54,7 @@ def append_event(payload: dict[str, Any], root: str = ".") -> None:
             slim[key] = {k: v for k, v in slim[key].items() if k not in ("content", "diff")}
     for key in ("output", "tool_response"):
         if isinstance(slim.get(key), str) and len(slim[key]) > 2000:
-            slim[key] = slim[key][:2000] + "…"
+            slim[key] = slim[key][:1000] + "…" + slim[key][-1000:]  # keep the tail: test summaries live there
     with open(trace_path(root), "a", encoding="utf-8") as f:
         f.write(json.dumps(slim, ensure_ascii=False) + "\n")
 
@@ -205,6 +205,31 @@ def fold(events: list[dict[str, Any]]) -> dict[str, Any]:
         "added_deps": deps,
         "commands": commands,
     }
+
+
+_TEST_CMD_RE = re.compile(r"\b(npm|pnpm|yarn)\s+(run\s+)?test\b|\bjest\b|\bpytest\b|\bvitest\b|\bgo test\b|\bcargo test\b")
+_JEST_RE = re.compile(r"Tests:\s+(?:(\d+)\s+failed,\s+)?(?:(\d+)\s+skipped,\s+)?(\d+)\s+passed,\s+(\d+)\s+total")
+_PYTEST_RE = re.compile(r"(?:(\d+)\s+failed,\s+)?(\d+)\s+passed")
+
+
+def tests_from_events(events: list[dict[str, Any]]) -> dict[str, Any]:
+    """Deterministic test result from the last test-runner command the agent ran (jest/pytest summary lines)."""
+    result = {"run": False, "passed": 0, "failed": 0}
+    for e in (unwrap(x) for x in events):
+        if e.get("event") != "PostToolUse" or e.get("tool") not in EXEC_TOOLS:
+            continue
+        cmd = str((e.get("input") or {}).get("command") or "")
+        out = e.get("output") if isinstance(e.get("output"), str) else ""
+        if not _TEST_CMD_RE.search(cmd):
+            continue
+        m = _JEST_RE.search(out)
+        if m:
+            result = {"run": True, "passed": int(m.group(3)), "failed": int(m.group(1) or 0)}
+            continue
+        m = _PYTEST_RE.search(out)
+        if m:
+            result = {"run": True, "passed": int(m.group(2)), "failed": int(m.group(1) or 0)}
+    return result
 
 
 def clear(root: str = ".") -> None:
