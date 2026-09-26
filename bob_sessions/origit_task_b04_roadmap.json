@@ -1,0 +1,12 @@
+{
+  "task": "origit_task_b04_roadmap",
+  "status": "success",
+  "stats": {
+    "task_id": "3e0b4968072fab742e3adc87957f20e1",
+    "duration_ms": 42393,
+    "session_costs": 0.08396600000000001,
+    "max_cost": 0.5,
+    "tool_calls": 3
+  },
+  "last_message": "[`docs/roadmap.md`](docs/roadmap.md) is written. Here's what each section covers and where the content was grounded:\n\n**§1 Release check on top of the record** — directly transcribes the ProofPatch description from §2.5 (`policy → Bob's interpretation → human approval → targeted tests → PASS/STOP/REVIEW`), explains what each outcome means, and reinforces the claims-discipline rule that no AI makes the gate decision.\n\n**§2 Adapters** — opens with \"Bob-native first\" (the exact phrase from §2.4 Positioning), then maps the three named agents to their actual native event surfaces (Claude Code JSONL/MCP stream, Cursor plugin API, Codex CLI JSONL tail). Acceptance-test compatibility with the Bob adapter is stated as the bar.\n\n**§3 CI/CD gate and IDE plugin** — describes a single-line GitHub Actions step running `origit verify` (record presence + `record_sha256` tamper check), a VS Code extension with a JetBrains follow-on, and the taint command surfaced in the Git timeline. Both are read-only consumers of `git notes` so they add no new data path.\n\n**§4 AIVSS / full CWE / MITRE ATLAS** — starts from the four hackathon CWEs already in [`docs/asi-mapping.md`](docs/asi-mapping.md), fills in the missing categories (CWE-732/862 for ASI02, CWE-20 for ASI06, CWE-287 for ASI07, CWE-693 for ASI09), and maps four ATLAS techniques to the ASI categories that have deterministic prefilter coverage (AML.T0051 → ASI01, AML.T0010 → ASI04, AML.T0049 → ASI05, AML.T0047 → ASI03), noting that the remaining six await the ATLAS agentic-AI extension draft.\n\nNo other file was modified."
+}
