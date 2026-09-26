@@ -25,16 +25,12 @@ Never commit `.env` or any key file. `.gitignore` covers `.env`, `bob-*.json`, `
 ## Coin ledger (Tim's account)
 - IDE tasks T01–T06: 3.9 · Shell: T07 0.08, B01 (statements, 20 turns) ~8.8?, B03 0.15, J04 ~1.1 — exact figures in `bob_sessions/*.json` (`stats.session_costs`). Check the Bob web portal balance before Sunday; reserve 10.
 
-## Commit recipe (Tim, after every Bob task)
-```bash
-cd ~/Documents/bcco/code/origit-demo-payments-api
-npm test
-git add -A
-ORIGIT_MODE=origit-build ORIGIT_TESTS='{"run":true,"passed":N,"failed":0}' git commit -m "feat: <what Bob did> [bob task NN]"
-origit log | head -3      # the new commit must show actor bob-ide and Bob's task id as session
-```
-`origit` must be on PATH: `export PATH=~/Documents/bcco/code/origit/origit/.venv/bin:$PATH` (the git hooks find it anyway).
-Approver is preset in that repo via `git config origit.approver bernard`.
+## How a Bob task becomes a commit (current flow)
+1. Run the task: in Bob IDE (workspace = the repo) or headless with `tools/bob/run-task.sh <workspace> <mode> <slug> "<prompt>"` (stats land in `bob_sessions/<slug>.json`).
+2. Hooks trace the prompt and every tool call into `.origit/trace.jsonl`.
+3. When Bob stops, the Stop hook runs `origit session-commit`: stages the session's changes, message = task prompt + Bob's summary, and the git hooks fold the trace into the sealed record. Nothing to do by hand. `origit log` shows the new commit as `bob-ide` with the session id.
+4. Push with `git push <remote> main refs/notes/origit` (demo repo → `origit` = Hetzner/console; product repo → `origin` = GitHub).
+Approver is preset per repo (`git config origit.approver`), mode per repo (`git config origit.mode`) or env `ORIGIT_MODE`.
 
 ## Decisions
 - **One Bob session = one commit = one record (16:20 Sat).** Bob's Stop hook runs `origit session-commit`: stages the session's changes, writes the commit message from the task prompt and Bob's summary, and the git hooks seal the record. Enabled per repo by `git config origit.autocommit true` (set by `origit init`). Proven on the demo repo (343d6b0). Writes are the union of traced write-tool calls and files staged in the commit, so edits made through shell commands are recorded too.

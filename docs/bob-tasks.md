@@ -24,10 +24,7 @@ Every task below runs with the Origit hooks live, so each commit gets a real rec
 | T07 | Agent | `origit_task07_taint_review.png` | 2 | Read `demo/evidence/taint-fast-pay-utils.json` and `docs/cra-article-14.md`. Write `docs/incident-2026-09-26.md`: a one-page incident summary for the security lead listing affected commits, sessions, files, approver, first-read time, rollback commit, and which Article 14 deadline items are already answerable from the record. Do not modify any other file. |
 | T08+ | origit-dev | `origit_task08_<module>.png` | 3–5 each | **Only with coins left after T07 and the 10-coin reserve.** Bob re-implements one Origit module at a time against the tests: "Reimplement every function in `origit/origit/taint.py` from its docstring so `origit/tests/test_taint.py` passes; do not read the existing implementation." Then trace.py, notes.py, record.py. |
 
-How Bob's commits are made (demo repo): after each task Tim runs `npm test`, then in `code/origit-demo-payments-api`:
-`git add -A && ORIGIT_MODE=<mode> ORIGIT_TESTS='{"run":true,"passed":N,"failed":0}' git commit -m "<what Bob did> [bob task NN]"`.
-Approver is preset (`git config origit.approver bernard`). The pre-commit hook folds Bob's trace into the record; post-commit attaches it.
-Screenshots always go to `code/origit/bob_sessions/`.
+How Bob's commits are made: **automatically.** When a Bob session stops, the Stop hook commits the session's changes with the task prompt as subject and seals the record (see STATUS "How a Bob task becomes a commit"). Nobody runs git after a task. Screenshots always go to `code/origit/bob_sessions/`.
 
 ## Jeremy (40 coins) — attack surface + pre-filter (works only in `demo/packages/`, `docs/asi-mapping.md`, `prefilter.py`)
 
