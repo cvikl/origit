@@ -1,0 +1,12 @@
+{
+  "task": "origit_task_j04_asi_mapping",
+  "status": "success",
+  "stats": {
+    "task_id": "576ca27357101ff58d53d4bcbaf09d65",
+    "duration_ms": 57072,
+    "session_costs": 0.376788,
+    "max_cost": 1,
+    "tool_calls": 7
+  },
+  "last_message": "[`docs/asi-mapping.md`](docs/asi-mapping.md) is written. Here is a summary of every decision made:\n\n---\n\n### What the document contains\n\n**Table (ASI01–ASI10)**\n\n| Column | Source used |\n|--------|-------------|\n| *Exact title* | Taken verbatim from the OWASP PDF headings (e.g. \"Memory & Context Poisoning\" not \"Memory and Context Poisoning\") |\n| *Origit deterministic check* | Every firing rule in [`prefilter.py`](origit/origit/prefilter.py) is named explicitly with the triggering condition; categories that have no rule written against them say \"not observable from a commit record\" |\n| *Bob evaluates* | Describes what a model reviewer can infer from the structured record + the commit diff — grounded in what the record schema actually contains (`added_deps`, `read`, `wrote`, `commands`, `changed_files`) |\n| *Default severity* | The label emitted by the deterministic rule (or N/A when no rule fires); for ASI01, \"high\" is used because `rule_hidden_text` is the highest-severity rule for that category |\n| *CWE* | Drawn from the four tags in [`prefilter.py`](origit/origit/prefilter.py:33) (`CWE-506`, `CWE-829`, `CWE-94`, `CWE-200`); N/A for categories with no deterministic rule |\n\n**Narrative paragraph — commit `eed5e9b`**\n\nThe three triggered categories are cited in the order their findings appear in [`prefilter-eed5e9b.json`](demo/evidence/prefilter-eed5e9b.json) (highest severity first per the sort in `run()`):\n\n- **ASI04** — `rule_new_dependency` on `fast-pay-utils@2.1.0`\n- **ASI01** — `rule_hidden_text`, 361 Unicode-tag characters in `node_modules/fast-pay-utils/README.md`, decoded payload quoted directly from the JSON evidence field\n- **ASI05** — `rule_commands`, five commands quoted verbatim from the JSON evidence field; explains how it is the causal precondition for the ASI01 trigger"
+}
