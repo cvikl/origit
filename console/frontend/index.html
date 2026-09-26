@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Origit Console</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--red:#f85149;--redbg:#3d1416;--green:#3fb950;--greenbg:#12261e;--amber:#d29922;--amberbg:#2b2110;--purple:#bc8cff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+a{color:var(--accent);text-decoration:none}code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px}
+header{display:flex;align-items:center;gap:16px;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--panel);position:sticky;top:0;z-index:5}
+header h1{font-size:16px;margin:0;font-weight:600}header h1 span{color:var(--muted);font-weight:400}
+.badge{display:inline-block;padding:1px 8px;border-radius:12px;border:1px solid var(--border);font-size:11.5px;color:var(--muted);white-space:nowrap}
+.badge.bob{border-color:var(--purple);color:var(--purple)}.badge.human{border-color:var(--muted)}.badge.none{opacity:.5}
+.badge.sev-informational{color:var(--muted)}.badge.sev-low{color:var(--accent);border-color:var(--accent)}.badge.sev-medium{color:var(--amber);border-color:var(--amber)}.badge.sev-high,.badge.sev-critical{color:var(--red);border-color:var(--red)}
+.badge.ok{color:var(--green);border-color:var(--green)}
+nav{margin-left:auto;display:flex;gap:6px}nav button,button.primary,button.ghost{background:#21262d;color:var(--text);border:1px solid var(--border);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px}
+nav button.active{background:#1f6feb;border-color:#1f6feb}button.primary{background:#238636;border-color:#2ea043}button.primary:disabled{opacity:.5;cursor:default}
+main{display:grid;grid-template-columns:420px 1fr;min-height:calc(100vh - 53px)}
+.list{border-right:1px solid var(--border);overflow:auto}
+.row{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:4px 8px}
+.row:hover,.row.sel{background:var(--panel)}.row .subj{font-weight:600}.row .meta{color:var(--muted);font-size:12px;grid-column:1/3;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row.tainted{border-left:4px solid var(--red);background:var(--redbg)}.row.clean{border-left:4px solid var(--green)}.row.unknown{border-left:4px solid var(--border)}
+.detail{padding:18px 24px;overflow:auto}
+h2{font-size:18px;margin:0 0 6px}h3{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:22px 0 8px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;font-size:13px}.kv div:nth-child(odd){color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:8px 0}
+ul.plain{list-style:none;padding:0;margin:0}ul.plain li{padding:3px 0;border-bottom:1px dashed var(--border)}
+.asi{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.asi .c{border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:var(--panel);min-height:110px}
+.asi .c.na{opacity:.45}.asi .c.finding{border-color:var(--red);background:var(--redbg)}.asi .c.clean{border-color:var(--green)}
+.asi .c b{display:block;font-size:12.5px}.asi .c .st{font-size:11.5px;color:var(--muted);margin:4px 0}.asi .c p{margin:6px 0 0;font-size:12.5px}
+.taintbox{display:flex;gap:8px;align-items:center}.taintbox input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:6px;font-size:14px}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.summary .card b{display:block;font-size:22px}.summary .card span{color:var(--muted);font-size:12px}
+.red{color:var(--red)}.green{color:var(--green)}.muted{color:var(--muted)}pre{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;overflow:auto;font-size:12px;white-space:pre-wrap}
+.split{display:grid;grid-template-columns:1fr 360px;gap:16px}.side{position:sticky;top:70px;align-self:start}
+.draft .kv{grid-template-columns:190px 1fr}.hidden{display:none}.note{font-size:12px;color:var(--muted)}
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid var(--muted);border-top-color:transparent;border-radius:50%;animation:s 1s linear infinite;vertical-align:middle;margin-right:6px}@keyframes s{to{transform:rotate(360deg)}}
+@media (max-width:900px){main{grid-template-columns:1fr}.list{max-height:40vh}.split{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Origit Console <span id="repoName"></span></h1>
+  <span class="badge" id="srcBadge"></span>
+  <span class="badge" id="bobBadge"></span>
+  <nav><button id="navCommits" class="active">Commits</button><button id="navTaint">Taint</button></nav>
+</header>
+<main>
+  <aside class="list" id="list"></aside>
+  <section class="detail" id="detail"><p class="muted">Loading…</p></section>
+</main>
+<script>
+const S={repo:null,sel:null,view:'commits',taint:null,asi:null};
+const $=s=>document.querySelector(s);const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=iso=>iso?iso.replace('T',' ').replace(/(\.\d+)?(Z|[+-]\d\d:\d\d)$/,' UTC'):'-';
+async function api(p,opt){const r=await fetch(p,opt);return r.json();}
+function sevBadge(s){return s?`<span class="badge sev-${s}">${s}</span>`:''}
+function actorBadge(c){if(!c.has_record)return '<span class="badge none">no record</span>';return c.actor==='human'?'<span class="badge human">human</span>':`<span class="badge bob">${esc(c.actor)}${c.mode?' · '+esc(c.mode):''}</span>`}
+function rowClass(c){if(!S.taint)return '';const a=S.taint.affected.some(x=>x.sha===c.sha);if(a)return 'tainted';return c.has_record||S.taint.clean.some(x=>x.sha===c.sha)?'clean':'unknown'}
+function renderList(){const L=$('#list');L.innerHTML=S.repo.commits.map(c=>`<div class="row ${rowClass(c)} ${S.sel===c.sha?'sel':''}" data-sha="${c.sha}">
+  <div class="subj">${esc(c.subject)}</div><div><span class="badge mono">${c.short}</span></div>
+  <div class="meta">${actorBadge(c)}${c.session?`<span class="mono" title="${esc(c.session)}">session ${esc(c.session.slice(0,8))}</span>`:''}${c.approver?`<span>✓ ${esc(c.approver)}</span>`:''}
+  ${c.has_record?`<span>${c.reads} reads · ${c.writes} writes${c.deps.length?' · +'+c.deps.join(', '):''}</span>`:''}${sevBadge(c.top_severity)}${c.reviewed?'<span class="badge ok">Bob evidence</span>':c.needs_review?'<span class="badge">needs review</span>':''}</div></div>`).join('');
+  L.querySelectorAll('.row').forEach(r=>r.onclick=()=>{S.view='commits';setNav();openCommit(r.dataset.sha)});}
+function setNav(){$('#navCommits').classList.toggle('active',S.view==='commits');$('#navTaint').classList.toggle('active',S.view==='taint');}
+async function openCommit(sha){S.sel=sha;renderList();const D=$('#detail');D.innerHTML='<p class="muted"><span class="spinner"></span>Loading record…</p>';const c=await api('/api/commit/'+sha);S.cur=c;D.innerHTML=commitHtml(c);
+  const b=$('#reviewBtn');if(b)b.onclick=async()=>{b.disabled=true;b.innerHTML='<span class="spinner"></span>Bob is reading the record and the diff…';const r=await api('/api/review/'+sha+(b.dataset.force?'?force=1':''),{method:'POST'});c.review=r;D.innerHTML=commitHtml(c);openCommit(sha);};}
+function commitHtml(c){const rec=c.record||{};const f=c.prefilter?c.prefilter.findings:[];const rv=c.review;const t=S.taint&&S.taint.affected.find(x=>x.sha===c.sha);
+  return `<h2>${esc(c.subject)} <span class="badge mono">${c.short}</span></h2>
+  <div class="note">${esc(c.author||'')} · ${fmt(c.date)} · ${c.files.length} file(s) changed ${t?`· <span class="red">tainted by ${esc(S.taint.needle)}</span>`:''}</div>
+  ${!c.has_record?'<div class="card">No Origit record: this commit predates <code>origit init</code> or was made without the hooks.</div>':`
+  <h3>Origit record <span class="badge ${c.verified?'ok':'sev-high'}">${c.verified?'sha-256 verified':'HASH MISMATCH'}</span></h3>
+  <div class="card"><div class="kv">
+    <div>actor</div><div>${actorBadge(c)} ${rec.actor.config_sha256?`<span class="note mono">config ${rec.actor.config_sha256.slice(0,12)}…</span>`:''}</div>
+    <div>session</div><div class="mono">${esc(rec.session.id)} <span class="note">${fmt(rec.session.started_at)} → ${fmt(rec.session.ended_at)}</span></div>
+    <div>author / approver</div><div>${esc(rec.author)} / ${rec.approver?esc(rec.approver)+' <span class="note">'+fmt(rec.approved_at)+'</span>':'<span class="muted">none</span>'}</div>
+    <div>tests</div><div>${rec.tests.run?`${rec.tests.passed} passed, ${rec.tests.failed} failed`:'<span class="muted">not run at commit</span>'}</div>
+    <div>record sha256</div><div class="mono">${esc(rec.record_sha256)}</div></div></div>
+  <div class="split"><div>
+  <h3>Read (${rec.read.length})</h3><div class="card"><ul class="plain">${rec.read.map(r=>`<li><span class="badge">${r.kind}</span> <span class="mono">${esc(r.ref)}</span>${r.sha256?` <span class="note mono">${r.sha256.slice(0,10)}</span>`:''}</li>`).join('')||'<li class="muted">nothing</li>'}</ul></div>
+  <h3>Wrote (${rec.wrote.length})</h3><div class="card"><ul class="plain">${rec.wrote.map(w=>`<li class="mono">${esc(w)}</li>`).join('')||'<li class="muted">nothing</li>'}</ul></div>
+  </div><div>
+  <h3>Dependencies added (${rec.added_deps.length})</h3><div class="card"><ul class="plain">${rec.added_deps.map(d=>`<li class="mono">${esc(d.name)}@${esc(d.version)} <span class="note">${esc(d.registry)}</span></li>`).join('')||'<li class="muted">none</li>'}</ul></div>
+  <h3>Commands (${rec.commands.length})</h3><div class="card"><ul class="plain">${rec.commands.map(x=>`<li class="mono">${esc(x)}</li>`).join('')||'<li class="muted">none</li>'}</ul></div>
+  </div></div>
+  <h3>Deterministic pre-filter <span class="note">zero Bobcoins · ${f.length} finding(s) · ${c.prefilter.needs_review?'Bob review requested':'nothing to review'}</span></h3>
+  <div class="card">${f.length?`<ul class="plain">${f.map(x=>`<li><b>${x.asi}</b> ${esc(x.title)} ${sevBadge(x.severity)} <span class="badge">${x.cwe}</span><br><span class="note">${esc(x.evidence)}</span>${x.ref?`<br><span class="note mono">${esc(x.ref)}</span>`:''}</li>`).join('')}</ul>`:'<span class="muted">No trigger fired: no new dependency, no external read, no hidden characters, no agent-config or secret files touched.</span>'}</div>
+  <h3>OWASP Agentic Top 10 — evidence ${rv&&rv.ok?`<span class="badge bob">by IBM Bob · ${rv.seconds||'?'} s${rv.stats&&rv.stats.cost!=null?' · '+rv.stats.cost+' coins':''}</span>`:''}</h3>
+  ${asiGrid(c)}
+  ${c.prefilter.needs_review?`<p>${rv&&rv.ok?`<button class="ghost" id="reviewBtn" data-force="1">Re-run Bob review</button>`:`<button class="primary" id="reviewBtn" ${S.repo.bob.available?'':'disabled'}>Ask Bob for cited evidence</button> ${S.repo.bob.available?'':'<span class="note">Bob Shell unavailable: '+esc(S.repo.bob.reason)+'</span>'}</p>`}${rv&&!rv.ok&&!rv.skipped?`<pre>${esc(rv.error||rv.stderr||rv.text||'')}</pre>`:''}`:''}
+  ${rv&&rv.ok&&rv.json&&rv.json.summary?`<div class="card"><b>Bob's summary</b><br>${esc(rv.json.summary)}</div>`:''}`}`;}
+function asiGrid(c){const rv=c.review&&c.review.ok&&c.review.json?c.review.json.categories||{}:null;const pf={};(c.prefilter.findings||[]).forEach(x=>{if(!pf[x.asi]||S.asi.severities.indexOf(x.severity)>S.asi.severities.indexOf(pf[x.asi].severity))pf[x.asi]=x});
+  return `<div class="asi">${Object.entries(S.asi.asi).map(([k,title])=>{let cls='na',st='not applicable',ev='',sev='';const r=rv&&rv[k];
+    if(r){cls=r.status==='finding'?'finding':r.status==='checked-clean'?'clean':'na';st=r.status.replace('-',' ');ev=r.evidence?`<p>${esc(r.evidence)}</p><p class="note">${esc(r.rationale||'')}</p>`:`<p class="note">${esc(r.rationale||'')}</p>`;sev=r.status==='finding'?sevBadge(r.severity)+(r.cwe?` <span class="badge">${esc(r.cwe)}</span>`:''):'';}
+    else if(pf[k]){cls='finding';st='pre-filter trigger';ev=`<p class="note">${esc(pf[k].evidence)}</p>`;sev=sevBadge(pf[k].severity)+` <span class="badge">${pf[k].cwe}</span>`;}
+    else if(!c.has_record){st='no record';}
+    return `<div class="c ${cls}"><b>${k} · ${esc(title)}</b><div class="st">${st} ${sev}</div>${ev}</div>`}).join('')}</div>`}
+function taintView(){S.view='taint';setNav();S.sel=null;renderList();const D=$('#detail');D.innerHTML=`<h2>Taint query</h2><p class="note">Which commits did an agent write after reading a package, file or content hash? Walks every sealed record; answers in milliseconds.</p>
+  <div class="taintbox"><input id="q" placeholder="fast-pay-utils · fast-pay-utils@2.1.0 · node_modules/fast-pay-utils/README.md · <sha256>" value="${esc(S.taint?S.taint.needle:'')}"><button class="primary" id="go">Run taint</button></div><div id="tres"></div>`;
+  const run=async()=>{const q=$('#q').value.trim();if(!q)return;$('#tres').innerHTML='<p class="muted"><span class="spinner"></span>walking records…</p>';const t0=performance.now();S.taint=await api('/api/taint?q='+encodeURIComponent(q));S.taint.ms=Math.round(performance.now()-t0);renderList();renderTaint();};
+  $('#go').onclick=run;$('#q').onkeydown=e=>{if(e.key==='Enter')run()};if(S.taint)renderTaint();}
+function renderTaint(){const t=S.taint;const R=$('#tres');if(!t.affected.length){R.innerHTML=`<div class="card">0 commits affected by <code>${esc(t.needle)}</code> · ${t.clean.length} commits checked in ${t.ms} ms</div>`;return;}
+  const latestApproval=t.affected.map(c=>c.approved_at||'').sort().pop();
+  R.innerHTML=`<div class="summary">
+    <div class="card"><b class="red">${t.affected.length}</b><span>commits affected · ${t.ms} ms</span></div>
+    <div class="card"><b>${t.sessions.length}</b><span>agent sessions</span></div>
+    <div class="card"><b>${t.files_written.length}</b><span>files written downstream</span></div>
+    <div class="card"><b class="mono" style="font-size:16px">${t.rollback_commit?t.rollback_commit.slice(0,7):'-'}</b><span>roll back to (last clean commit)</span></div></div>
+  <div class="split"><div>
+  <h3>Affected commits</h3>${t.affected.map(c=>`<div class="card"><b>${esc(c.subject)}</b> <span class="badge mono">${c.sha.slice(0,7)}</span> <span class="badge bob">${esc(c.actor)}</span><div class="note">session <span class="mono">${esc(c.session)}</span> · approver ${esc(c.approver||'-')} ${fmt(c.approved_at)}</div>
+    <ul class="plain">${c.matched.map(m=>`<li class="mono note">↳ ${esc(m)}</li>`).join('')}</ul><div class="note">wrote: <span class="mono">${c.wrote.map(esc).join(', ')}</span></div><div style="margin-top:6px"><a href="#" data-sha="${c.sha}" class="open">open record →</a></div></div>`).join('')}
+  </div><div class="side">
+  <h3>Incident facts (from sealed records)</h3><div class="card"><div class="kv">
+    <div>first exposure</div><div>${fmt(t.first_read.at)}<br><span class="note mono">session ${esc(t.first_read.session)}</span></div>
+    <div>sessions</div><div class="mono note">${t.sessions.map(esc).join('<br>')}</div>
+    <div>files</div><div class="mono note">${t.files_written.map(esc).join('<br>')}</div>
+    <div>approver(s)</div><div>${t.approvers.map(esc).join(', ')||'-'} <span class="note">${fmt(latestApproval)}</span></div>
+    <div>roll back to</div><div class="mono">${esc(t.rollback_commit||'-')}</div>
+    <div>clean commits</div><div>${t.clean.length}</div></div></div>
+  <h3>CRA Article 14</h3><div class="card"><p class="note">Early warning due 24 h after awareness (Art. 14(4)(a)). Bob drafts it from the taint result; nothing is invented.</p>
+  <button class="primary" id="draftBtn" ${S.repo.bob.available||t.draft?'':'disabled'}>${t.draft?'Show Article 14 draft':'Draft Article 14 early warning'}</button> ${S.repo.bob.available?'':'<span class="note">Bob Shell unavailable</span>'}<div id="draft"></div></div>
+  </div></div>`;
+  R.querySelectorAll('a.open').forEach(a=>a.onclick=e=>{e.preventDefault();S.view='commits';setNav();openCommit(a.dataset.sha)});
+  $('#draftBtn').onclick=async()=>{const b=$('#draftBtn');if(t.draft&&t.draft.ok){renderDraft(t.draft);return;}b.disabled=true;b.innerHTML='<span class="spinner"></span>Bob is drafting from the record…';const d=await api('/api/art14?q='+encodeURIComponent(t.needle),{method:'POST'});t.draft=d;b.disabled=false;b.textContent='Re-draft';renderDraft(d);};
+  if(t.draft&&t.draft.ok)renderDraft(t.draft);}
+function renderDraft(d){const D=$('#draft');if(!d.ok){D.innerHTML=`<pre>${esc(d.error||d.stderr||d.text||'draft failed')}</pre>`;return;}const j=d.json||{};const li=v=>Array.isArray(v)?`<ul class="plain">${v.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:esc(v);
+  D.innerHTML=`<div class="draft" style="margin-top:10px"><b>${esc(j.title||'Early warning')}</b> <span class="badge bob">drafted by IBM Bob · ${d.seconds||'?'} s</span><div class="kv" style="margin-top:8px">${['to','manufacturer','product','awareness_at','deadline_early_warning','deadline_notification','incident_type','malicious_acts_suspected','affected_components','affected_commits','agent_sessions','first_exposure','approved_by','member_states','corrective_measures_taken','user_measures'].filter(k=>j[k]!==undefined).map(k=>`<div>${k.replace(/_/g,' ')}</div><div>${li(j[k])}</div>`).join('')}</div><p style="white-space:pre-wrap">${esc(j.narrative||'')}</p></div>`;}
+async function boot(){S.asi=await api('/api/asi');S.repo=await api('/api/repo');$('#repoName').textContent=S.repo.name;$('#srcBadge').textContent=S.repo.source==='git'?'live git notes':'evidence pack';$('#bobBadge').textContent=S.repo.bob.available?'IBM Bob: connected':'IBM Bob: '+S.repo.bob.reason;$('#bobBadge').className='badge '+(S.repo.bob.available?'ok':'');
+  renderList();$('#navCommits').onclick=()=>{S.view='commits';setNav();if(S.sel)openCommit(S.sel);else $('#detail').innerHTML='<p class="muted">Select a commit.</p>'};$('#navTaint').onclick=taintView;
+  const first=S.repo.commits.find(c=>c.has_record&&c.actor!=='human')||S.repo.commits[0];if(first)openCommit(first.sha);}
+boot();
+</script>
+</body>
+</html>

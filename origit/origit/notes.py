@@ -71,3 +71,17 @@ def commits(repo: str, rev_range: str = "HEAD") -> list[tuple[str, str, dict[str
             continue
         result.append((sha, subject, read(repo, sha) if sha in noted else None))
     return result
+
+
+def log_meta(repo: str, rev_range: str = "HEAD") -> dict[str, dict[str, Any]]:
+    """sha -> {author, date, parents, subject, files} for the range (files = paths changed)."""
+    out = _git(repo, "log", "--format=%H%x00%an%x00%aI%x00%P%x00%s", "--name-only", rev_range)
+    meta: dict[str, dict[str, Any]] = {}
+    cur = None
+    for line in out.splitlines():
+        if "\0" in line:
+            sha, author, date, parents, subject = line.split("\0", 4)
+            cur = meta[sha] = {"author": author, "date": date, "parents": parents.split(), "subject": subject, "files": []}
+        elif line.strip() and cur is not None:
+            cur["files"].append(line.strip())
+    return meta

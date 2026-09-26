@@ -281,8 +281,10 @@ def taint(needle: str, as_json: bool, rev_range: str) -> None:
 def export(rev_range: str) -> None:
     """JSON evidence pack: list of {sha, subject, record} for the range, newest first."""
     root = _root()
-    pack = [{"sha": s, "subject": sub, "record": rec} for s, sub, rec in N.commits(root, rev_range)]
-    click.echo(json.dumps({"repo": root, "range": rev_range, "exported_at": T.utcnow(), "commits": pack}, indent=2, ensure_ascii=False))
+    meta = N.log_meta(root, rev_range)
+    pack = [{"sha": s, "subject": sub, **{k: meta.get(s, {}).get(k) for k in ("author", "date", "parents", "files")}, "record": rec}
+            for s, sub, rec in N.commits(root, rev_range)]
+    click.echo(json.dumps({"repo": os.path.basename(root), "range": rev_range, "exported_at": T.utcnow(), "head": N.head(root), "commits": pack}, indent=2, ensure_ascii=False))
 
 
 @main.command()
