@@ -13,7 +13,8 @@ Never commit `.env` or any key file. `.gitignore` covers `.env`, `bob-*.json`, `
 | 3 | Bob config in repo: modes `origit-dev`/`origit-build`, rules, hooks, AGENTS.md; Bob IDE 2.2.0 installed, modes visible | Tim + Claude | 0 | ✅ |
 | 4 | Jeremy's tainted `fast-pay-utils@2.1.0` integrated (`demo/packages/`), compiled `dist/`, clean 2.0.0 with same API | Jeremy + Claude | 0 | ✅ |
 | 5 | T01 hook verification in Bob IDE: **NATIVE** (17 events, session id + paths present, 0.28 coins) | Tim | 0.3 | ✅ |
-| 6 | T02 demo scaffold, T03–T06 traced Bob sessions + clean commit, T07 incident summary | Tim (Bob) | ~12–15 | Sat pm |
+| 5b | Commits: T01 as bob-ide record (ec815d5), two-repo split, submodule `demo/payments-api` | Claude | 0 | ✅ |
+| 6 | **T02 demo scaffold** (workspace = `origit-demo-payments-api`), then T03–T06 traced Bob sessions + clean commit, T07 incident summary | Tim (Bob) | ~12–15 | ⏳ now |
 | 7 | J01 advisory, J02 reviewer prompt, J03 prefilter tests + rules | Jeremy (Bob) | ~8 | Sat night HK |
 | 8 | B01 statements, B02 Art.14 drafter prompt, B03 demo script | Bernard (Bob) | ~7 | Sat |
 | 9 | Console: backend (notes → JSON, prefilter, `bob run` reviewer + drafter), frontend, deploy | Tim + Claude (+ Bob for frontend) | ~5–10 | Sun 08–12 |
@@ -41,6 +42,7 @@ Approver is preset in that repo via `git config origit.approver bernard`.
 - Storage: `refs/notes/origit`, one note per commit. Every commit gets a record (human commits marked `actor: human`); agent commits without a trace are refused.
 
 ## Dev notes
+- T02 was run as a follow-up inside the T01 task with `code/origit` open, so Bob wrote into the submodule checkout and the trace landed in the origit repo. Claude moved the files and re-rooted the trace paths (`_rerooted_from` marker on each event) into `origit-demo-payments-api` before folding. From T03 on: **workspace = `origit-demo-payments-api`, and always click New Task** so each session has its own id.
 - Tests: `cd origit && env -u PYTHONPATH PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/python -m pytest -q` (Tim's machine has ROS on PYTHONPATH which breaks plain pytest).
 
 ## Blocked
