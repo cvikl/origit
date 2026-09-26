@@ -19,7 +19,7 @@ Never commit `.env` or any key file. `.gitignore` covers `.env`, `bob-*.json`, `
 | 6c | T07 incident summary | Tim (Bob) | 2 | after 6b |
 | 7 | J01 advisory, J02 reviewer prompt, J03 prefilter tests + rules | Jeremy (Bob) | ~8 | Sat night HK |
 | 8 | B01 statements, B02 Art.14 drafter prompt, B03 demo script | Bernard (Bob) | ~7 | Sat |
-| 9 | Console: backend (notes → JSON, prefilter, `bob run` reviewer + drafter), frontend, deploy | Tim + Claude (+ Bob for frontend) | ~5–10 | Sun 08–12 |
+| 9 | Console: **built in the separate `origit-console` repo by Tim's other Claude session** (FastAPI, hosted at origit.uk, vendors this core as `vendor/origit`). This repo only points to it (`console/README.md`). A duplicate stdlib console was built here by mistake and removed (history: 774dae3). Remaining: bump `vendor/origit` to latest core, cached Bob evidence for the demo commits, deploy | Tim (other session) | ~5–10 | Sat/Sun |
 | 10 | Video, slides, submit | all | 10 reserved each | Sun 12–14 |
 
 ## Commit recipe (Tim, after every Bob task)
@@ -34,6 +34,7 @@ origit log | head -3      # the new commit must show actor bob-ide and Bob's tas
 Approver is preset in that repo via `git config origit.approver bernard`.
 
 ## Decisions
+- **Console = `code/origit-console` (other Claude session), not `code/origit/console/`.** Its prompts (`prompts/asi-reviewer.md`, `asi-rulebook.md`, `art14-early-warning.md`) are the ones Jeremy/Bernard review. Bob Shell 2.0.5 is installed here under nvm Node 24 (`~/.nvm/versions/node/v24.21.0/bin/bob`); headless runs need `ulimit -n 65536` or they die with EMFILE from the file watcher.
 - **Two repos (decided 13:10 Sat).** `code/origit` = product + submission. `code/origit-demo-payments-api` = the fintech's repo Bob works in (own `.bob` from `origit init`, vendored `packages/fast-pay-utils`), linked into the product repo as submodule `demo/payments-api`. Reason: the story is "a fintech installs Origit into *their* repo"; taint results and the console stay free of Origit's own commits. `demo/evidence/` in the product repo holds committed `origit export` / taint snapshots for judges who do not init submodules.
 - `fast-pay-utils` is installed as a local `file:` dependency; `record fold` derives `added_deps` from the package.json diff.
 - **Claude builds the deterministic core; Bob is the traced actor, reviewer and drafter.** Decided 12:30 Sat after debate: judges score Bob's use *in the solution*; coins go to the demo sessions first. If coins remain after the demo, Bob re-implements modules against the tests (T08+).

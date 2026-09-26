@@ -52,7 +52,7 @@ A GitHub-like view of the repo with agent context visible: push → commits → 
 
 ```
 origit/      CLI + core (Python 3.11+, click only)
-console/     web console (backend ingests git notes, runs pre-filter, calls Bob reviewer; frontend)
+console/     pointer to the hosted console (separate repo origit-console, https://origit.uk)
 demo/        payments-api (git submodule → origit-demo-payments-api: the fintech's repo Bob works in) + evidence pack
 docs/        statements, ASI mapping, CRA note, demo script, roadmap, STATUS.md
 bob_sessions/  PNG screenshots of Bob IDE task session summaries (all team members)

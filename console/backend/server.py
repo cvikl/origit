@@ -156,7 +156,11 @@ def bob_run(prompt: str, attachments: dict[str, str] | None = None) -> dict:
         with open(os.path.join(ws, "PROMPT.md"), "w", encoding="utf-8") as f:
             f.write(prompt)
         cmd = ["bob", "run", "--format", "json", "--max-cost", BOB_MAX_COST, "--max-turns", BOB_MAX_TURNS, "--workspace", ws,
-               "Follow the instructions in @PROMPT.md exactly. Reply with the JSON only."]
+               "--mode", os.environ.get("BOB_REVIEW_MODE", "ask"), "--disable-mcp", "--disable-subagents", "--accept-license", "--trust",
+               "--log-level", "error"]
+        if os.environ.get("BOB_TEAM_ID"):
+            cmd += ["--team-id", os.environ["BOB_TEAM_ID"]]
+        cmd.append("Follow the instructions in @PROMPT.md exactly. Reply with the JSON only.")
         t0 = time.time()
         p = subprocess.run(cmd, capture_output=True, text=True, cwd=ws, timeout=600)
         raw = p.stdout

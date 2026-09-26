@@ -1,17 +1,14 @@
 # Origit Console
 
-GitHub-like view of a repository with the agent context visible, powered by IBM Bob.
+The hosted, paid tier of Origit lives in its own repository and runs at **https://origit.uk**:
+[`origit-console`](https://github.com/<org>/origit-console) — a FastAPI service that hosts git repositories with agent
+provenance visible: commits with their Origit record, pushes pre-filtered on arrival (deterministic, zero Bobcoins),
+**cited ASI01–ASI10 evidence written by IBM Bob** (Bob Shell, ask mode) when the pre-filter fires, the taint view
+(red/green commits, sessions, files, approver, first read, roll-back commit), the CRA **Article 14 early-warning draft**,
+a security tracker and the evidence-pack export.
 
-- `backend/server.py` — stdlib HTTP server: API + static frontend. Reads Origit records from a git repo
-  (`ORIGIT_REPO_PATH`) or from the committed evidence pack (`demo/evidence/export.json`).
-- `backend/prompts/` — the two Bob prompts: `asi-reviewer.md` (cited evidence per ASI01–10) and
-  `art14-early-warning.md` (CRA Article 14 early warning from a taint result).
-- `frontend/` — plain HTML/JS, no build step.
-- `data/` — cached Bob outputs (reviews per commit, drafts per needle). Committed so the deployed demo never re-spends coins.
+It vendors this repository's core as the git submodule `vendor/origit`, so the CLI and the console always agree on
+the record format, the pre-filter rules and the taint engine.
 
-Run locally:
-```bash
-export ORIGIT_REPO_PATH=../origit-demo-payments-api   # optional; falls back to demo/evidence
-export BOB_API_KEY=...                                  # optional; without it review/draft buttons show "unavailable"
-python3 console/backend/server.py                       # http://localhost:8787
-```
+Open-core, like git → GitHub: this repository (the CLI) is free and offline; the console is what a bank buys to prove
+what its agents did.
