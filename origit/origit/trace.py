@@ -49,11 +49,12 @@ def append_event(payload: dict[str, Any], root: str = ".") -> None:
     os.makedirs(os.path.join(root, STATE_DIR), exist_ok=True)
     slim = dict(payload)
     slim["ts"] = utcnow()
-    inp = slim.get("input")
-    if isinstance(inp, dict):
-        slim["input"] = {k: v for k, v in inp.items() if k not in ("content", "diff")}
-    if isinstance(slim.get("output"), str) and len(slim["output"]) > 2000:
-        slim["output"] = slim["output"][:2000] + "…"
+    for key in ("input", "tool_input"):
+        if isinstance(slim.get(key), dict):
+            slim[key] = {k: v for k, v in slim[key].items() if k not in ("content", "diff")}
+    for key in ("output", "tool_response"):
+        if isinstance(slim.get(key), str) and len(slim[key]) > 2000:
+            slim[key] = slim[key][:2000] + "…"
     with open(trace_path(root), "a", encoding="utf-8") as f:
         f.write(json.dumps(slim, ensure_ascii=False) + "\n")
 
@@ -85,12 +86,24 @@ def iter_events(root: str = ".") -> list[dict[str, Any]]:
 
 
 def unwrap(event: dict[str, Any]) -> dict[str, Any]:
-    """Normalise a trace line: fallback tracer writes {"ts", "raw": {...}}; return the flat payload with ``ts``."""
+    """Normalise a trace line to {event, session_id, tool, input, output, ts, cwd}.
+
+    Accepts the documented schema (event/tool/input/output), the live Bob IDE 2.2 schema
+    (hook_event_name/tool_name/tool_input/tool_response, plus cwd and tool_use_id), and the
+    fallback tracer's wrapped form {"ts", "raw": {...}}.
+    """
     if isinstance(event.get("raw"), dict):
-        out = dict(event["raw"])
-        out["ts"] = event.get("ts")
-        return out
-    return event
+        inner = dict(event["raw"])
+        inner["ts"] = event.get("ts")
+        event = inner
+    out = dict(event)
+    out["event"] = event.get("event") or event.get("hook_event_name")
+    out["tool"] = event.get("tool") or event.get("tool_name")
+    inp = event.get("input") if isinstance(event.get("input"), dict) else event.get("tool_input")
+    out["input"] = inp if isinstance(inp, dict) else {}
+    if "output" not in out and "tool_response" in event:
+        out["output"] = event["tool_response"]
+    return out
 
 
 _NPM_RE = re.compile(r"^\s*(?:npm|pnpm|yarn)\s+(?:install|i|add)\s+(.*)$")
@@ -166,7 +179,7 @@ def fold(events: list[dict[str, Any]]) -> dict[str, Any]:
         tool = e.get("tool") or ""
         inp = e.get("input") if isinstance(e.get("input"), dict) else {}
         if tool in READ_TOOLS:
-            add("file", str(inp.get("path") or "."))
+            add("file", str(inp.get("path") or inp.get("pattern") or "."))
         elif tool in WRITE_TOOLS:
             if inp.get("path"):
                 wrote.add(str(inp["path"]))

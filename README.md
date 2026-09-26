@@ -53,7 +53,7 @@ A GitHub-like view of the repo with agent context visible: push → commits → 
 ```
 origit/      CLI + core (Python 3.11+, click only)
 console/     web console (backend ingests git notes, runs pre-filter, calls Bob reviewer; frontend)
-demo/        payments-api sample repo + fast-pay-utils 2.0.0 (clean) / 2.1.0 (tainted, synthetic)
+demo/        payments-api (git submodule → origit-demo-payments-api: the fintech's repo Bob works in) + evidence pack
 docs/        statements, ASI mapping, CRA note, demo script, roadmap, STATUS.md
 bob_sessions/  PNG screenshots of Bob IDE task session summaries (all team members)
 slides/      final deck
@@ -63,9 +63,11 @@ slides/      final deck
 
 ```bash
 cd origit && pip install -e .
-cd ../demo/payments-api && origit init
+cd /path/to/your/repo && origit init      # installs Bob hooks, origit-build mode, git hooks
 # work in Bob IDE, commit as usual …
+origit log
 origit taint fast-pay-utils
+# demo: git submodule update --init && cd demo/payments-api && origit taint fast-pay-utils
 ```
 
 ## Positioning

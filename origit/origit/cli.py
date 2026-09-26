@@ -69,6 +69,9 @@ def init(force: bool) -> None:
             p = os.path.join(d, f)
             os.chmod(p, os.stat(p).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
     subprocess.run(["git", "-C", root, "config", "core.hooksPath", ".githooks"], check=True)
+    exe = shutil.which("origit") or sys.argv[0]
+    if exe and os.path.isabs(exe):
+        subprocess.run(["git", "-C", root, "config", "origit.bin", exe], check=False)
     os.makedirs(os.path.join(root, STATE_DIR), exist_ok=True)
     gi = os.path.join(root, ".gitignore")
     line = f"{STATE_DIR}/trace.jsonl"

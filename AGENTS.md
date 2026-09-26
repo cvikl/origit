@@ -7,7 +7,7 @@ stored in `refs/notes/origit`, queryable with `origit taint <package|file|sha256
 - `origit/origit/` CLI + core. `record.py` (schema, canonical hash — done), `trace.py` (hook consumer + fold),
   `notes.py` (git notes), `taint.py` (query), `prefilter.py` (deterministic ASI triggers), `cli.py`, `templates/`.
 - `origit/tests/` acceptance tests. A task is done when its test file passes.
-- `console/` web console (Sunday). `demo/payments-api/` sample app. `docs/` statements and STATUS.md.
+- `console/` web console (Sunday). `demo/payments-api/` is a git submodule (separate repo `origit-demo-payments-api`, do not edit it from here). `docs/` statements and STATUS.md.
 
 ## Commands
 - Install: `cd origit && python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"`

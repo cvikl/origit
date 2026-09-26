@@ -67,3 +67,22 @@ def test_fold_output_finalizes_as_record():
     r = T.fold(sample())
     r.update(author="tim", approver="bernard", approved_at="2026-09-26T13:00:00Z", tests={"run": True, "passed": 3, "failed": 0}, schema=R.SCHEMA)
     assert R.verify(R.finalize(r))
+
+
+def test_live_bob_ide_schema_is_normalised():
+    """Field names as emitted by Bob IDE 2.2.0 (captured 2026-09-26), not the documented ones."""
+    sid = "ef74353172505a674f0bf4e712500d7e"
+    live = [
+        {"session_id": sid, "cwd": "/w", "hook_event_name": "SessionStart", "source": "startup", "ts": "2026-09-26T11:34:35Z"},
+        {"session_id": sid, "cwd": "/w", "hook_event_name": "PreToolUse", "tool_name": "read_file", "tool_input": {"path": "origit/origit/trace.py"}, "tool_use_id": "t1", "ts": "2026-09-26T11:34:38Z"},
+        {"session_id": sid, "cwd": "/w", "hook_event_name": "PostToolUse", "tool_name": "read_file", "tool_input": {"path": "origit/origit/trace.py"}, "tool_response": "...", "tool_use_id": "t1", "ts": "2026-09-26T11:34:39Z"},
+        {"session_id": sid, "cwd": "/w", "hook_event_name": "PostToolUse", "tool_name": "glob", "tool_input": {"pattern": "**/record.py"}, "tool_response": "...", "ts": "2026-09-26T11:34:40Z"},
+        {"session_id": sid, "cwd": "/w", "hook_event_name": "PostToolUse", "tool_name": "apply_diff", "tool_input": {"path": "origit/origit/record.py"}, "tool_response": "ok", "ts": "2026-09-26T11:34:50Z"},
+        {"session_id": sid, "cwd": "/w", "hook_event_name": "PostToolUse", "tool_name": "execute_command", "tool_input": {"command": "ls origit/origit"}, "tool_response": "cli.py", "ts": "2026-09-26T11:34:55Z"},
+        {"session_id": sid, "cwd": "/w", "hook_event_name": "Stop", "ts": "2026-09-26T11:35:00Z"},
+    ]
+    r = T.fold(live)
+    assert r["session"]["id"] == sid and r["actor"]["kind"] == "bob-ide"
+    assert [(x["kind"], x["ref"]) for x in r["read"]] == [("file", "origit/origit/trace.py"), ("file", "**/record.py")]
+    assert r["wrote"] == ["origit/origit/record.py"]
+    assert r["commands"] == ["ls origit/origit"]

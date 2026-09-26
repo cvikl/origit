@@ -17,7 +17,9 @@ for line in open(p, encoding="utf-8"):
         print("UNPARSED:", line[:200]); continue
     raw = o.get("raw", o)
     if isinstance(raw, dict):
-        raw = dict(raw); raw["ts"] = o.get("ts"); events.append(raw)
+        raw = dict(raw); raw["ts"] = o.get("ts")
+        raw.setdefault("event", raw.get("hook_event_name")); raw.setdefault("tool", raw.get("tool_name")); raw.setdefault("input", raw.get("tool_input"))
+        events.append(raw)
     else:
         print("RAW-NOT-JSON:", str(raw)[:200])
 
