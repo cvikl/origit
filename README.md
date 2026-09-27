@@ -18,7 +18,7 @@ Built for the [IBM Bob 2.0 Hackathon](https://lablab.ai/ai-hackathons/ibm-bob-2-
 
 | Command | What it answers |
 |---|---|
-| `origit init` | Installs Bob IDE hooks, the `origit-build` custom mode and git hooks into an existing repo |
+| `origit init` | Installs Bob IDE hooks, the `origit-build` and `origit-review` modes, the Origit MCP server, the `/origit` skill and git hooks into an existing repo |
 | `origit trace` | Hook consumer: appends every Bob tool call to `.origit/trace.jsonl` |
 | `origit record` | Folds the trace into a canonical, SHA-256-hashed record stored in `refs/notes/origit` |
 | `origit session start / status` | Opens a new recording session (assigned display number) / shows current session state |
@@ -29,7 +29,7 @@ Built for the [IBM Bob 2.0 Hackathon](https://lablab.ai/ai-hackathons/ibm-bob-2-
 | `origit mcp` | Start the MCP server (stdio, JSON-RPC 2.0) so Bob can answer provenance questions in chat |
 | `origit export` | JSON evidence pack for a commit range |
 
-**Rule: a commit without a record does not exist.** The pre-commit hook refuses agent commits that have no captured trace. Human commits pass through, marked `actor: human`.
+**Rule: a commit without a record does not exist.** Every commit gets a record; agent commits without a captured trace can be refused by the pre-commit hook (`ORIGIT_REQUIRE_TRACE=1`). Human commits pass through, marked `actor: human`. Since Sunday the Stop hook commits each Bob run itself: **one Bob run = one commit = one record**.
 
 ## The record
 
@@ -42,7 +42,7 @@ author · approver · approved_at · tests {run, passed, failed} · record_sha25
 
 ## Origit Console (powered by IBM Bob)
 
-A GitHub-like view of the repo with agent context visible: push → commits → record. On every push a **deterministic pre-filter** (new dependency? external read? command executed? agent config changed? invisible Unicode-tag characters in anything the agent read?) decides whether Bob is asked to evaluate the push against the [OWASP Top 10 for Agentic Applications](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/) and write **cited evidence per category**. Taint view lights affected commits red. One button drafts the CRA Article 14 early warning from the record.
+A GitHub-like view of the repo with agent context visible: push → commits → record, session labels (`#42`), hash verified on every view. **Free plan:** records, file provenance, taint, evidence pack. **Business plan (Bob Review):** on every push a **deterministic pre-filter** runs (new dependency? external read? command executed? agent config changed? invisible Unicode-tag characters in anything the agent read?) and IBM Bob then reads the record, the decoded hidden text, the diff and the [OWASP Top 10 for Agentic Applications](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/) rulebook and writes **cited evidence per ASI01–ASI10 category** with CVSS-style severity and CWE for every new commit. Taint view lights affected commits red; one button asks Bob to draft the CRA Article 14 early warning from the record; a Security tab tracks coverage per push. Rule: **Bob evaluates and drafts; deterministic code records and queries. Bob never edits a record or a taint result.** Live: https://origit.uk
 
 ## Origit for Bob IDE
 
@@ -148,6 +148,7 @@ Install from the `.vsix` via **Extensions → ··· → Install from VSIX**.
 ```
 origit/      CLI + core (Python 3.11+, click only)
 console/     pointer to the hosted console (separate repo origit-console, https://origit.uk)
+extensions/  origit-vscode: "Origit for Bob IDE" (ORIGIT view in Source Control, Origit: Taint…, status bar), packaged .vsix
 demo/        payments-api (git submodule → origit-demo-payments-api: the fintech's repo Bob works in) + evidence pack
 docs/        statements, ASI mapping, CRA note, demo script, roadmap, STATUS.md
 bob_sessions/  PNG screenshots of Bob IDE task session summaries (all team members)
@@ -158,9 +159,9 @@ slides/      final deck
 
 ```bash
 cd origit && pip install -e .
-cd /path/to/your/repo && origit init      # installs Bob hooks, origit-build mode, git hooks
-# work in Bob IDE, commit as usual …
-origit log
+cd /path/to/your/repo && origit init --session-base 1   # Bob hooks, modes, MCP server, skill, git hooks
+# work in Bob IDE: every run is committed and recorded when Bob stops
+origit log            # sessions → runs → records
 origit taint fast-pay-utils
 # demo: git submodule update --init && cd demo/payments-api && origit taint fast-pay-utils
 ```
