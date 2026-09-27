@@ -561,7 +561,8 @@ def taint(needle: str, as_json: bool, rev_range: str) -> None:
         return
     latest_approval = max((c["approved_at"] or "" for c in out["affected"]), default="")
     click.echo(f"{n} commit{'s' if n != 1 else ''} affected")
-    click.echo(f"Sessions: {', '.join(out['session_labels'].get(x, x) for x in out['sessions']) or '-'}")
+    ordered = sorted(out["sessions"], key=lambda x: (labels.get(x, 10**9), x))
+    click.echo(f"Sessions: {', '.join(out['session_labels'].get(x, x) for x in ordered) or '-'}")
     click.echo(f"Files: {', '.join(out['files_written']) or '-'}")
     click.echo(f"Approver: {', '.join(out['approvers']) or '-'} ({_fmt_ts(latest_approval or None)})")
     fr = out["first_read"]
