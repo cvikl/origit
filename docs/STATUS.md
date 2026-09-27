@@ -18,7 +18,7 @@ Progress is logged below under **Log (Sunday)**; the task table is kept current.
 
 ## Tim's morning checklist (in this order, ~60 min without the video)
 
-1. **Deploy the console** (blocked for Claude): `cd ~/Documents/bcco/code/origit-console && bash deploy/publish.sh` (≈3 min; `.env` already has BOB_API_KEY, GIT_SSH_HOST=git@origit.uk, BOB_MAX_TURNS=8, BOB_TIMEOUT=300). Then:
+1. ✅ done 04:15, redeployed ~04:50 with per-push review — **Deploy the console**: `cd ~/Documents/bcco/code/origit-console && bash deploy/publish.sh` (≈3 min; `.env` already has BOB_API_KEY, GIT_SSH_HOST=git@origit.uk, BOB_MAX_TURNS=8, BOB_TIMEOUT=300). Then:
    ```bash
    set -a; . ~/Documents/bcco/code/origit-console/.env; set +a
    curl -s https://origit.uk/api/health                       # expect "api_key": true
@@ -35,6 +35,8 @@ Progress is logged below under **Log (Sunday)**; the task table is kept current.
 7. **Submit** by 14:30 BST: title, descriptions, statements (≤ 500 words each), tags, cover image, repo URL, application URL https://origit.uk, video, slides.
 
 ## Log (Sunday)
+- 04:15 **Deployed** (Tim authorised): origit.uk runs the Business-plan console, Bob connected (teammate key from `IBM-BOB/APIs`), demo repo on the Business plan, 17/17 commits with Bob evidence, taint 7 affected, Art. 14 draft cached.
+- 04:45 **Tim's product calls:** origit.uk is *one enterprise customer's read-only dashboard* (`CONSOLE_READONLY=1`, `DEMO_ACCOUNT=acme-payments`; no push instructions or hosts on any page; repos/plans/sources locked; Bob actions stay token-gated). **Bob Review is per push** (a commit = one Bob run; the push is what a reviewer approves): per-commit evidence is aggregated per push and Bob writes one summary + "first action" per push (`review-pushes`, `push-evidence`). **Security page rewritten** in plain language: what needs attention, the ten checks with the question each answers and what Origit hands to Bob, then push by push.
 - 04:05 **Done for the night.** Every demo commit (17/17) has parsed Bob evidence; the scaffold commit needed the patch trimmed (lockfile dropped from what Bob reads) — fixed in the console (`e4e80e8`). `origit-console` main is at `e4e80e8` with seeds committed, **not deployed** (Tim: checklist step 1). `origit` main is pushed to GitHub with `refs/notes/origit`. Local console server stopped; Bob worktrees removed (branches `bob/core`, `bob/extension` merged).
 - Remaining for humans: deploy + plan + review-status check (5 min), IDE screenshots (extension already installed), one live IDE run, video, deck v4 (`docs/deck-fixes.md`), statements fixes (`docs/statements-check.md`), Bernard/Jeremy IDE tasks, GitHub repos for demo + console, submission form by 14:30 BST.
 - 03:50 **Track C done locally.** IBM Bob reviewed **all 17 demo commits** through the console (Bob Shell, ask mode, 0.03–0.11 coins each) and drafted the **Article 14(4)(a) early warning** for `fast-pay-utils`; both are cached in `origit-console/seed/` so the deployed console shows them at once. What Bob said, unedited: `ac31928` (session #42) ASI01 **high** (decoded Unicode-tag instruction in the README), ASI05 **high**, ASI03 high, ASI04 low; `d8f549f` (#43) ASI01 high; `d899879` (#45, advisory) ASI01/ASI04 high; the clean feature commits `b4edd9c`/`36c384b` low/informational (here-doc writes, commands run); the human chore commits get medium findings for the hook changes (ASI06 context change). Noisy in places; shown as evidence, never a gate.
