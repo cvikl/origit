@@ -1,8 +1,23 @@
 # Origit — STATUS (read this first, all time zones)
 
-Deadline: **Sun 27 Sep 2026 16:00 BST (15:00 UTC)** · form complete by 14:00 BST. HK = BST+7.
-Bobcoins: 40 per person, no top-ups. Reserve 10 each for the recorded demo run. Screenshot **every** Bob task into `bob_sessions/` immediately.
-Never commit `.env` or any key file. `.gitignore` covers `.env`, `bob-*.json`, `apikey*`.
+Deadline: **Sun 27 Sep 2026 16:00 BST (15:00 UTC)** · everything recorded and submitted by **14:30 BST**. HK = BST+7.
+Bobcoins: ~37 left on Tim's account (only Tim's key is on this machine). Reserve 8. Screenshot **every** Bob IDE task into `bob_sessions/`.
+Never commit `.env` or any key file.
+
+## Final-day plan (started Sun 02:05 BST, Claude working unattended while Tim sleeps)
+
+Split: **A** core session manager (Claude) · **B** Bob IDE extension (Bob Shell builds, Claude reviews and packages) · **C** Business plan: Bob Review on push + real Art. 14 draft (Claude wires, Bob runs) · **D** Bob usage log (every Bob run → `bob_sessions/*.json`; IDE PNGs need humans) · **E** consistency + submission package.
+
+1. A: `origit session start` / `run start` / `trace` / `run end` (auto-commit, `bob: <prompt> [session #n run m]`), human edits between runs committed as `actor: human`, session display ids `#42…` stored in the record, `origit log --json` grouped by session/run, `show --json`, `init` writes hooks + `mcp.json` + `/origit` skill + `origit-review` mode. Tests.
+2. B: Bob Shell scaffolds `extensions/origit-vscode/` (ORIGIT view in Source Control, `Origit: Taint…`, status bar) in a git worktree; packaged to `.vsix`; installed into Bob IDE from the CLI if it accepts it. **Tim: open the demo repo in Bob IDE and screenshot the panel** (video opener).
+3. C: review runs automatically on every push (post-receive → background Bob run per new commit with a record); `POST …/draft-art14` calls Bob for real; evidence cached and seeded; demo repo switched to the Business plan; landing numbers computed from the real repo.
+4. D: Bob writes the MCP server (`origit mcp`), the `/origit` skill, the README Bob-IDE section; Bob runs two more traced sessions in the demo repo; Bob reviews every demo commit; Bob drafts Art. 14; Bob answers a taint question over the Origit MCP. Stats for each run in `bob_sessions/`.
+5. E: console fixes, `docs/deck-fixes.md` for Bernard, `docs/demo-script.md` re-cut to the new flow, statements checked against the code, `docs/bob-usage-statement.md` rewritten from what actually happened, secrets scan, push.
+
+Progress is logged below under **Log (Sunday)**; the task table is kept current.
+
+## Log (Sunday)
+- 02:05 Plan written. Baseline: core 61 tests green; demo repo 23 Jest tests green; console live at origit.uk (13 commits, 12 records, plan=free, Bob key not configured on the server).
 
 ## Now (Sat 26 Sep, 12:45 BST)
 
