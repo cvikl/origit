@@ -8,7 +8,7 @@ The demo fintech repository (`demo/payments-api`) is instrumented by `origit ini
 
 ## 2. Bob's lifecycle hooks are the data source
 
-`SessionStart`, `UserPromptSubmit`, `PostToolUse` and `Stop` hooks in `.bob/settings.json` call `origit session start`, `run start`, `trace` and `run end`. The payload gives session id, tool name, path and command; nothing is inferred. When Bob stops, Origit commits the run (`bob: <prompt> [session #48 run 1]`), runs the tests and seals the record as a git note. One Bob run = one commit = one record. In session #43 Bob ran `git commit` itself; the hooks still folded its trace.
+`SessionStart`, `UserPromptSubmit`, `PostToolUse` and `Stop` hooks in `.bob/settings.json` call `origit session start`, `run start`, `trace` and `run end`. The payload carries session id, tool, path and command. When Bob stops, Origit commits the run (`bob: <prompt> [session #48 run 1]`), runs the tests and seals the record as a git note. One Bob run = one commit = one record. In session #43 Bob ran `git commit` itself; the hooks still folded its trace.
 
 ## 3. Bob reviews and drafts
 
@@ -16,7 +16,7 @@ On the Business plan of the hosted console (origit.uk) every push is pre-filtere
 
 ## 4. Bob answers provenance questions in chat
 
-`origit init` registers an MCP server (`origit mcp`: `origit_taint`, `origit_show`, `origit_log`) and an `/origit` skill. Asked "which commits read fast-pay-utils and what did they write?", Bob answered with seven commits, seven session labels, the first-read time and the roll-back commit in three tool calls.
+`origit init` registers an MCP server (`origit mcp`: `origit_taint`, `origit_show`, `origit_log`) and an `/origit` skill. Asked "which commits read fast-pay-utils and what did they write?", Bob answered with seven commits, session labels, first-read time and roll-back commit in three tool calls.
 
 ## 5. Bob built parts of Origit
 
