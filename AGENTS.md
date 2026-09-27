@@ -4,15 +4,23 @@ Origit is an agent provenance layer for git: a hashed record per commit of what 
 stored in `refs/notes/origit`, queryable with `origit taint <package|file|sha256>`. Deterministic Python core, IBM Bob at the edges.
 
 ## Layout
-- `origit/origit/` CLI + core. `record.py` (schema, canonical hash — done), `trace.py` (hook consumer + fold),
-  `notes.py` (git notes), `taint.py` (query), `prefilter.py` (deterministic ASI triggers), `cli.py`, `templates/`.
+- `origit/origit/` CLI + core. `record.py` (schema, canonical hash), `trace.py` (hook consumer + fold),
+  `notes.py` (git notes), `taint.py` (query), `prefilter.py` (deterministic ASI triggers), `session.py` (session/run
+  state: one Bob run = one commit = one record), `sessions.py` (display ids `#42`, grouping by session/run),
+  `mcp.py` (stdio MCP server: origit_taint / origit_show / origit_log), `cli.py`, `templates/` (what `origit init` installs:
+  Bob hooks, `origit-build` + `origit-review` modes, `mcp.json`, `skills/origit`).
+- `extensions/origit-vscode/` VS Code extension for Bob IDE (ORIGIT view in Source Control); no logic, reads `origit … --json`.
 - `origit/tests/` acceptance tests. A task is done when its test file passes.
 - `console/` web console (Sunday). `demo/payments-api/` is a git submodule (separate repo `origit-demo-payments-api`, do not edit it from here). `docs/` statements and STATUS.md.
 
 ## Commands
 - Install: `cd origit && python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"`
 - Test: `cd origit && env -u PYTHONPATH PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/python -m pytest -q`
-- CLI: `origit/.venv/bin/origit --help`
+- CLI: `origit/.venv/bin/origit --help` · `origit log [--json]` groups commits by session and run · `origit show <sha> --json` · `origit taint <needle> --json`
+- Hooks (installed by `origit init`): SessionStart → `origit session start`, UserPromptSubmit → `origit run start`,
+  PostToolUse → `origit trace`, Stop → `origit run end` (auto-commit `bob: <prompt> [session #n run m]`, record as a note).
+- Headless Bob tasks: `tools/bob/run-task.sh <workspace> <mode> <slug> "<prompt>"`; run them in a git worktree
+  (`git worktree add ../origit-wt-x -b bob/x`) so parallel runs never share a trace, then merge the branch.
 
 ## Conventions
 - Records are canonical JSON (see `record.py`); never hand-build JSON strings, go through `record.finalize`.
