@@ -57,13 +57,15 @@ def _autocommit(root: str) -> bool:
 
 def _dirty_files(root: str) -> list[str]:
     """Tracked modifications + untracked files, excluding Origit state."""
-    out = _git(root, "status", "--porcelain", "--untracked-files=all", "--", ".", f":(exclude){STATE_DIR}") or ""
-    return [l[3:] for l in out.splitlines() if l.strip()]
+    out = _git(root, "status", "--porcelain", "--untracked-files=all") or ""
+    return [l[3:] for l in out.splitlines() if l.strip() and not l[3:].startswith(STATE_DIR + "/")]
 
 
 def _commit_all(root: str, message: str, env: dict[str, str]) -> tuple[bool, str]:
     """Stage everything except Origit state and commit; the git hooks fold/attach the record."""
-    subprocess.run(["git", "-C", root, "add", "-A", "--", ".", f":(exclude){STATE_DIR}"], check=False, capture_output=True)
+    subprocess.run(["git", "-C", root, "add", "-A"], check=False, capture_output=True)  # Origit state is git-ignored by init
+    for f in (T.trace_path("."), f"{STATE_DIR}/{PENDING_RECORD}", f"{STATE_DIR}/{SS.SESSION_FILE}", f"{STATE_DIR}/{SS.RUNS_DIR}"):
+        subprocess.run(["git", "-C", root, "reset", "-q", "--", f], check=False, capture_output=True)
     if subprocess.run(["git", "-C", root, "diff", "--cached", "--quiet"]).returncode == 0:
         return False, ""
     p = subprocess.run(["git", "-C", root, "commit", "-q", "-F", "-"], input=message, text=True, env={**os.environ, **env}, capture_output=True)
