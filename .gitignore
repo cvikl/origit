@@ -34,3 +34,7 @@ console/**/dist/
 .vscode/
 .idea/
 .DS_Store
+
+# bob runner scratch
+bob_sessions/*.raw
+bob_sessions/*.err

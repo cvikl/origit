@@ -18,6 +18,8 @@ from . import __version__, STATE_DIR, PENDING_RECORD
 from . import notes as N
 from . import prefilter as PF
 from . import record as R
+from . import session as SS
+from . import sessions as S
 from . import taint as X
 from . import trace as T
 
@@ -36,12 +38,38 @@ def _git(root: str, *args: str) -> str | None:
     return p.stdout.strip() if p.returncode == 0 else None
 
 
-def _root() -> str:
+def _root(start: str = ".") -> str:
     try:
-        return N.toplevel(".")
+        return N.toplevel(start)
     except N.NotesError:
         click.echo("origit: not inside a git repository", err=True)
         sys.exit(1)
+
+
+def _cfg(root: str, key: str, default: str | None = None) -> str | None:
+    v = _git(root, "config", "--get", key)
+    return v if v else default
+
+
+def _autocommit(root: str) -> bool:
+    return (_cfg(root, "origit.autocommit", "") or "").lower() in ("true", "1", "yes")
+
+
+def _dirty_files(root: str) -> list[str]:
+    """Tracked modifications + untracked files, excluding Origit state."""
+    out = _git(root, "status", "--porcelain", "--untracked-files=all", "--", ".", f":(exclude){STATE_DIR}") or ""
+    return [l[3:] for l in out.splitlines() if l.strip()]
+
+
+def _commit_all(root: str, message: str, env: dict[str, str]) -> tuple[bool, str]:
+    """Stage everything except Origit state and commit; the git hooks fold/attach the record."""
+    subprocess.run(["git", "-C", root, "add", "-A", "--", ".", f":(exclude){STATE_DIR}"], check=False, capture_output=True)
+    if subprocess.run(["git", "-C", root, "diff", "--cached", "--quiet"]).returncode == 0:
+        return False, ""
+    p = subprocess.run(["git", "-C", root, "commit", "-q", "-F", "-"], input=message, text=True, env={**os.environ, **env}, capture_output=True)
+    if p.returncode != 0:
+        return False, p.stderr[-400:]
+    return True, N.head(root)
 
 
 @click.group()
@@ -52,9 +80,10 @@ def main() -> None:
 
 # ----------------------------------------------------------------------------- init
 @main.command()
-@click.option("--force", is_flag=True, help="Overwrite existing .bob/ and hook files.")
-def init(force: bool) -> None:
-    """Install Bob IDE hooks, the origit-build mode and git hooks into this repo."""
+@click.option("--force", is_flag=True, help="Overwrite existing .bob/ and hook files (upgrade).")
+@click.option("--session-base", type=int, default=None, help="First session display number (e.g. 42). Written to .origit/config.json.")
+def init(force: bool, session_base: int | None) -> None:
+    """Install Bob IDE hooks, the origit-build / origit-review modes, the Origit MCP server, the /origit skill and git hooks."""
     root = _root()
     tpl = resources.files("origit") / "templates"
     bob_dst = os.path.join(root, ".bob")
@@ -72,15 +101,25 @@ def init(force: bool) -> None:
     exe = shutil.which("origit") or sys.argv[0]
     if exe and os.path.isabs(exe):
         subprocess.run(["git", "-C", root, "config", "origit.bin", exe], check=False)
+        mcp_p = os.path.join(bob_dst, "mcp.json")
+        try:  # the MCP server must be startable by the IDE without PATH tricks: absolute binary
+            mcp = json.load(open(mcp_p))
+            mcp["mcpServers"]["origit"]["command"] = exe
+            json.dump(mcp, open(mcp_p, "w"), indent=2)
+        except (OSError, KeyError, json.JSONDecodeError):
+            pass
     subprocess.run(["git", "-C", root, "config", "origit.autocommit", "true"], check=False)
     os.makedirs(os.path.join(root, STATE_DIR), exist_ok=True)
+    if session_base is not None:
+        json.dump({"session_base": session_base}, open(os.path.join(root, STATE_DIR, S.CONFIG_FILE), "w"))
     gi = os.path.join(root, ".gitignore")
-    line = f"{STATE_DIR}/trace.jsonl"
     existing = open(gi).read() if os.path.exists(gi) else ""
-    if line not in existing:
+    wanted = [f"{STATE_DIR}/trace.jsonl", f"{STATE_DIR}/{PENDING_RECORD}", f"{STATE_DIR}/{SS.SESSION_FILE}", f"{STATE_DIR}/{SS.RUNS_DIR}/", f"{STATE_DIR}/*.log"]
+    missing = [w for w in wanted if w not in existing.splitlines()]
+    if missing:
         with open(gi, "a") as f:
-            f.write(("" if existing.endswith("\n") or not existing else "\n") + f"# origit runtime state\n{line}\n{STATE_DIR}/{PENDING_RECORD}\n")
-    click.echo(f"origit: installed .bob/ (hooks, origit-build mode, rules), .githooks/ (pre/post-commit), core.hooksPath in {root}")
+            f.write(("" if existing.endswith("\n") or not existing else "\n") + "# origit runtime state\n" + "\n".join(missing) + "\n")
+    click.echo(f"origit: installed .bob/ (hooks, origit-build + origit-review modes, rules, mcp.json, skills/origit), .githooks/ (pre/post-commit), core.hooksPath in {root}")
 
 
 # ----------------------------------------------------------------------------- trace
@@ -161,6 +200,38 @@ def _deps_from_package_json(root: str) -> list[dict]:
     return found
 
 
+def _test_command(root: str) -> list[str] | None:
+    cmd = _cfg(root, "origit.testCommand")
+    if cmd:
+        return ["sh", "-c", cmd]
+    pj = os.path.join(root, "package.json")
+    try:
+        if json.load(open(pj)).get("scripts", {}).get("test"):
+            return ["npm", "test", "--silent"]
+    except (OSError, json.JSONDecodeError):
+        pass
+    if os.path.exists(os.path.join(root, "pytest.ini")) or os.path.exists(os.path.join(root, "pyproject.toml")):
+        return ["python3", "-m", "pytest", "-q"]
+    return None
+
+
+def _run_tests(root: str, timeout: int = 90) -> dict:
+    """Run the project's own test suite (plain subprocess, no AI) and parse jest/pytest totals."""
+    cmd = _test_command(root)
+    if not cmd:
+        return {"run": False, "passed": 0, "failed": 0}
+    try:
+        p = subprocess.run(cmd, cwd=root, capture_output=True, text=True, timeout=timeout)
+    except (OSError, subprocess.TimeoutExpired):
+        return {"run": False, "passed": 0, "failed": 0}
+    out = (p.stdout or "") + (p.stderr or "")
+    fake = [{"hook_event_name": "PostToolUse", "tool_name": "execute_command", "tool_input": {"command": " ".join(cmd) + " # npm test"}, "tool_response": out[-4000:]}]
+    res = T.tests_from_events(fake)
+    if not res["run"]:
+        res = {"run": True, "passed": 0 if p.returncode else 1, "failed": 1 if p.returncode else 0}
+    return res
+
+
 @main.command()
 @click.argument("stage", type=click.Choice(["fold", "attach"]))
 def record(stage: str) -> None:
@@ -168,7 +239,7 @@ def record(stage: str) -> None:
     root = _root()
     pending = os.path.join(root, STATE_DIR, PENDING_RECORD)
     if stage == "fold":
-        events = T.iter_events(root)
+        events = [] if os.environ.get("ORIGIT_ACTOR") == "human" else T.iter_events(root)
         parts = T.fold(events)
         if not events and os.environ.get("ORIGIT_REQUIRE_TRACE") == "1":
             click.echo("origit: agent commit without trace refused", err=True)
@@ -188,9 +259,20 @@ def record(stage: str) -> None:
                 parts["read"].append({"kind": "pkg", "ref": f"{d['name']}@{d['version']}", "sha256": None})
         if parts["actor"]["kind"] == "human":
             parts["session"] = {"id": f"human:{author}:{now}", "started_at": now, "ended_at": now}
-        parts["actor"]["mode"] = os.environ.get("ORIGIT_MODE") or None
+        parts["actor"]["mode"] = os.environ.get("ORIGIT_MODE") or _cfg(root, "origit.mode") or None
         parts["actor"]["config_sha256"] = _config_sha256(root)
+        st = SS.load(root)
+        if st and parts["actor"]["kind"] != "human" and (not parts["session"]["id"] or parts["session"]["id"] == st.get("id")):
+            parts["session"]["id"] = st.get("id") or parts["session"]["id"]
+            parts["session"]["number"] = st.get("number")
+            parts["session"]["run"] = st.get("run") or None
+            prompt = SS.current_prompt(st)
+            if prompt:
+                parts["session"]["prompt"] = " ".join(prompt.split())[:200]
+            parts["session"]["started_at"] = parts["session"]["started_at"] or st.get("started_at")
         tests = T.tests_from_events(events)
+        if not tests["run"] and os.environ.get("ORIGIT_RUN_TESTS") == "1" and parts["actor"]["kind"] != "human":
+            tests = _run_tests(root)
         if os.environ.get("ORIGIT_TESTS"):
             try:
                 tests.update(json.loads(os.environ["ORIGIT_TESTS"]))
@@ -216,72 +298,238 @@ def record(stage: str) -> None:
         click.echo(f"origit: record {rec['record_sha256'][:12]} attached to {sha[:7]} (refs/notes/origit)")
 
 
-# ----------------------------------------------------------------------------- session-commit
-@main.command("session-commit")
-@click.option("--root", default=".")
-def session_commit(root: str) -> None:
-    """Stop-hook consumer: when a Bob session ends, commit what it changed so one session = one commit = one record.
-
-    Reads the Stop payload on stdin (session_id, last_assistant_message). Enabled per repo with
-    ``git config origit.autocommit true``. Stages everything except Origit state, skips if nothing changed,
-    writes the commit message from Bob's own summary, and lets the pre/post-commit hooks seal the record.
-    Always exits 0 so it never blocks Bob.
-    """
+# ----------------------------------------------------------------------------- session / run (hook consumers)
+def _hook_payload() -> dict:
     try:
-        payload = T.read_stdin_payload() or {}
+        return T.read_stdin_payload() or {}
+    except Exception:  # noqa: BLE001
+        return {}
+
+
+def _trace_event(root: str, payload: dict, event: str) -> None:
+    if payload:
+        payload = {**payload}
+        payload.setdefault("hook_event_name", event)
+        T.append_event(payload, root)
+
+
+@main.group()
+def session() -> None:
+    """Session manager: one Bob session = many runs; one run = one commit = one record."""
+
+
+@session.command("start")
+@click.option("--root", default=".")
+def session_start(root: str) -> None:
+    """SessionStart hook: open a session, assign its display number (#42), snapshot the working tree."""
+    try:
+        payload = _hook_payload()
         top = N.toplevel(root)
-        if (_git(top, "config", "--get", "origit.autocommit") or "").lower() not in ("true", "1", "yes"):
+        _trace_event(top, payload, "SessionStart")
+        sid = str(payload.get("session_id") or f"local:{T.utcnow()}")
+        cur = SS.load(top)
+        if cur and cur.get("id") == sid:
+            click.echo(f"origit: session #{cur.get('number')} resumed", err=True)
             return
-        subprocess.run(["git", "-C", top, "add", "-A", "--", ".", f":(exclude){STATE_DIR}"], check=False, capture_output=True)
-        if subprocess.run(["git", "-C", top, "diff", "--cached", "--quiet"]).returncode == 0:
-            click.echo("origit: session ended, nothing to commit", err=True)
-            return
-        sid = payload.get("session_id") or "unknown"
-        summary = (payload.get("last_assistant_message") or "").strip()
-        prompts = [T.unwrap(e).get("prompt") for e in T.iter_events(top) if T.unwrap(e).get("event") == "UserPromptSubmit"]
-        prompts = [p.strip() for p in prompts if isinstance(p, str) and p.strip()]
-        first = (prompts[0] if prompts else next((l.strip(" #*-") for l in summary.splitlines() if l.strip()), "agent session"))
-        first = " ".join(first.split())[:72].rstrip(".")
-        body = summary[:1500]
-        msg = f"bob: {first}\n\nSession {sid}. Auto-committed by Origit when the agent stopped.\n\n{body}\n"
-        mode = _git(top, "config", "--get", "origit.mode") or os.environ.get("ORIGIT_MODE") or ""
-        env = {**os.environ, "ORIGIT_MODE": mode} if mode else dict(os.environ)
-        p = subprocess.run(["git", "-C", top, "commit", "-q", "-F", "-"], input=msg, text=True, env=env, capture_output=True)
-        if p.returncode == 0:
-            click.echo(f"origit: session {sid[:8]} committed as {N.head(top)[:7]}", err=True)
-        else:
-            click.echo(f"origit: session commit failed: {p.stderr[-300:]}", err=True)
-    except Exception as exc:  # noqa: BLE001
-        click.echo(f"origit session-commit: {exc}", err=True)
+        base = S.base(top)
+        number = S.next_number(N.commits(top), base)
+        dirty = {f: R.file_sha256(os.path.join(top, f)) for f in _dirty_files(top)[:200]}
+        head = _git(top, "rev-parse", "HEAD")
+        SS.save(top, SS.new(sid, number, T.utcnow(), head, dirty, str(payload.get("cwd") or "")))
+        click.echo(f"origit: session #{number} opened ({sid[:8]}), head {head[:7] if head else '-'}, {len(dirty)} dirty file(s)", err=True)
+    except Exception as exc:  # noqa: BLE001 — never block Bob
+        click.echo(f"origit session start: {exc}", err=True)
     sys.exit(0)
 
 
+@session.command("status")
+@click.option("--root", default=".")
+@click.option("--json", "as_json", is_flag=True)
+def session_status(root: str, as_json: bool) -> None:
+    """Current session (for the IDE status bar)."""
+    top = _root(root)
+    st = SS.status(SS.load(top))
+    if as_json:
+        click.echo(json.dumps(st))
+    elif st["recording"]:
+        click.echo(f"session {st['label']} run {st['run']} · recording ({st['id']})")
+    else:
+        click.echo("no session")
+
+
+@main.group()
+def run() -> None:
+    """Run lifecycle hooks: UserPromptSubmit -> `run start`, Stop -> `run end`."""
+
+
+@run.command("start")
+@click.option("--root", default=".")
+def run_start(root: str) -> None:
+    """UserPromptSubmit hook: commit human edits made since the last commit (actor: human), then open run n+1."""
+    try:
+        payload = _hook_payload()
+        top = N.toplevel(root)
+        sid = str(payload.get("session_id") or "")
+        st = SS.load(top)
+        if not st or (sid and st.get("id") != sid):
+            base = S.base(top)
+            st = SS.new(sid or f"local:{T.utcnow()}", S.next_number(N.commits(top), base), T.utcnow(), _git(top, "rev-parse", "HEAD"), {}, str(payload.get("cwd") or ""))
+        if _autocommit(top) and _dirty_files(top):
+            ok, res = _commit_all(top, f"human: edits before session #{st['number']} run {st.get('run', 0) + 1}\n\nCommitted by Origit when the next agent run started, so human and agent work never share a record.\n",
+                                  {"ORIGIT_ACTOR": "human"})
+            click.echo(f"origit: human edits committed as {res[:7]}" if ok else f"origit: human commit skipped {res}", err=True)
+        SS.begin_run(st, str(payload.get("prompt") or ""), T.utcnow())
+        SS.save(top, st)
+        _trace_event(top, payload, "UserPromptSubmit")
+        click.echo(f"origit: session #{st['number']} run {st['run']} started", err=True)
+    except Exception as exc:  # noqa: BLE001
+        click.echo(f"origit run start: {exc}", err=True)
+    sys.exit(0)
+
+
+@run.command("end")
+@click.option("--root", default=".")
+def run_end(root: str) -> None:
+    """Stop hook: fold the trace, run the tests, auto-commit the run, attach the record (via the git hooks).
+
+    With nothing to commit the folded record is stored under .origit/runs/<session>-<run>.json and the trace is cleared.
+    Enabled per repo with `git config origit.autocommit true` (set by `origit init`). Always exits 0.
+    """
+    try:
+        payload = _hook_payload()
+        top = N.toplevel(root)
+        _trace_event(top, payload, "Stop")
+        st = SS.load(top) or {}
+        sid = str(payload.get("session_id") or st.get("id") or "unknown")
+        if not _autocommit(top):
+            click.echo("origit: autocommit off; the next manual commit seals this run", err=True)
+            return
+        summary = (payload.get("last_assistant_message") or "").strip()
+        prompt = SS.current_prompt(st) or next((T.unwrap(e).get("prompt") for e in T.iter_events(top) if T.unwrap(e).get("event") == "UserPromptSubmit" and T.unwrap(e).get("prompt")), "") or ""
+        number, runno = st.get("number"), st.get("run") or None
+        subj = SS.subject(prompt, number, runno, fallback=next((l.strip(" #*-") for l in summary.splitlines() if l.strip()), "agent session"))
+        msg = f"{subj}\n\nSession {sid}{f' run {runno}' if runno else ''}. Auto-committed by Origit when the agent stopped.\n\n{summary[:1500]}\n"
+        env = {"ORIGIT_RUN_TESTS": "1"}
+        mode = _cfg(top, "origit.mode") or os.environ.get("ORIGIT_MODE") or ""
+        if mode:
+            env["ORIGIT_MODE"] = mode
+        ok, res = _commit_all(top, msg, env)
+        if ok:
+            SS.end_run(st, T.utcnow(), res)
+            SS.save(top, st)
+            click.echo(f"origit: session #{number} run {runno} committed as {res[:7]}", err=True)
+        elif res:
+            click.echo(f"origit: run commit failed: {res}", err=True)
+        else:
+            events = T.iter_events(top)
+            parts = T.fold(events)
+            if parts["actor"]["kind"] != "human":
+                parts["session"].update({"id": sid, "number": number, "run": runno})
+                rec = R.finalize({**parts, "schema": R.SCHEMA, "author": _cfg(top, "user.name") or "", "approver": None, "approved_at": None,
+                                  "tests": T.tests_from_events(events)})
+                p = SS.store_run_record(top, sid, runno or 0, rec)
+                click.echo(f"origit: run {runno} changed nothing; record kept at {os.path.relpath(p, top)}", err=True)
+            else:
+                click.echo("origit: run ended, nothing to commit", err=True)
+            T.clear(top)
+            SS.end_run(st, T.utcnow(), None)
+            SS.save(top, st)
+    except Exception as exc:  # noqa: BLE001
+        click.echo(f"origit run end: {exc}", err=True)
+    sys.exit(0)
+
+
+@main.command("session-commit", hidden=True)
+@click.option("--root", default=".")
+@click.pass_context
+def session_commit(ctx: click.Context, root: str) -> None:
+    """Deprecated alias of `origit run end` (kept for hooks installed on Saturday)."""
+    ctx.invoke(run_end, root=root)
+
+
 # ----------------------------------------------------------------------------- log / show
+def _prefilter_lite(root: str, sha: str, rec: dict) -> dict:
+    """Cheap pre-filter for list views: record-only rules plus hidden text in files still present in the working tree."""
+    changed = (_git(root, "diff-tree", "--no-commit-id", "--name-only", "-r", "--root", sha) or "").splitlines()
+    texts = {}
+    for r in rec.get("read", []):
+        if r.get("kind") == "file":
+            p = os.path.join(root, r["ref"])
+            if os.path.isfile(p) and os.path.getsize(p) < 2_000_000:
+                try:
+                    texts[r["ref"]] = open(p, encoding="utf-8", errors="replace").read()
+                except OSError:
+                    pass
+    findings = PF.run(rec, changed, texts)
+    sev = max((f["severity"] for f in findings), key=PF.SEVERITIES.index) if findings else None
+    return {"needs_review": PF.needs_review(findings), "max_severity": sev, "reasons": sorted({f["asi"] for f in findings})}
+
+
 @main.command()
 @click.option("--range", "rev_range", default="HEAD")
-def log(rev_range: str) -> None:
-    """One line per commit, newest first: sha, actor, session, approver, subject."""
+@click.option("--json", "as_json", is_flag=True, help="Sessions with their runs, newest first.")
+@click.option("--flat", is_flag=True, help="One line per commit (Saturday format).")
+def log(rev_range: str, as_json: bool, flat: bool) -> None:
+    """Commits grouped by agent session and run, newest first."""
     root = _root()
-    for sha, subject, rec in N.commits(root, rev_range):
-        if rec:
-            a = rec["actor"]["kind"]
-            s = (rec["session"].get("id") or "-")[:22]
-            ap = rec.get("approver") or "-"
-            click.echo(f"{sha[:7]}  {a:8} {s:22} {ap:10} {subject}")
+    cs = N.commits(root, rev_range)
+    base = S.base(root)
+    if flat:
+        labels = S.number_sessions(cs, base)
+        for sha, subject, rec in cs:
+            if rec:
+                a = rec["actor"]["kind"]
+                sid = rec["session"].get("id") or "-"
+                s_lbl = S.label(labels.get(sid)) if a != "human" else "human"
+                click.echo(f"{sha[:7]}  {a:8} {s_lbl:6} {(rec.get('approver') or '-'):10} {subject}")
+            else:
+                click.echo(f"{sha[:7]}  {'(none)':8} {'-':6} {'-':10} {subject}")
+        return
+    groups = S.group(cs, base)
+    for g in groups:
+        for r in g["runs"]:
+            r["prefilter"] = _prefilter_lite(root, r["sha"], r["record"]) if r["record"] else {"needs_review": False, "max_severity": None, "reasons": []}
+    if as_json:
+        click.echo(json.dumps({"repo": os.path.basename(root), "head": N.head(root), "base": base, "sessions": groups}, indent=2, ensure_ascii=False))
+        return
+    for g in groups:
+        if g["actor"] == "none":
+            head = "no record"
+        elif g["actor"] == "human":
+            head = "human"
         else:
-            click.echo(f"{sha[:7]}  {'(none)':8} {'-':22} {'-':10} {subject}")
+            head = f"session {g['label']} · Bob IDE{(' · ' + g['mode']) if g.get('mode') else ''} · {_fmt_ts(g['started_at'])} → {_fmt_ts(g['ended_at'])}"
+        click.echo(head)
+        for r in g["runs"]:
+            run_lbl = f"run {r['run']}" if r.get("run") else ""
+            stats = f"{r['n_read']} read · {r['n_wrote']} wrote" + (f" · {r['n_deps']} deps" if r["n_deps"] else "") if r["record"] else ""
+            t = r.get("tests") or {}
+            tests = f" · tests {t.get('passed', 0)}/{t.get('passed', 0) + t.get('failed', 0)}" if t.get("run") else ""
+            sev = f" · {r['prefilter']['max_severity']}" if r["prefilter"]["max_severity"] else ""
+            click.echo(f"  {r['sha'][:7]}  {run_lbl:6} {r['subject'][:70]}")
+            if stats:
+                click.echo(f"           {stats}{tests}{sev}")
+        click.echo("")
 
 
 @main.command()
 @click.argument("commit")
-def show(commit: str) -> None:
+@click.option("--json", "as_json", is_flag=True)
+def show(commit: str, as_json: bool) -> None:
     """Pretty-print the full record for a commit."""
     root = _root()
     sha = _git(root, "rev-parse", commit)
     rec = N.read(root, sha) if sha else None
     if not rec:
-        click.echo(f"origit: no record for {commit}", err=True)
-        sys.exit(1)
+        if as_json:
+            click.echo(json.dumps({"sha": sha, "record": None, "verified": False}))
+        else:
+            click.echo(f"origit: no record for {commit}", err=True)
+        sys.exit(0 if as_json else 1)
+    subject = _git(root, "log", "-1", "--format=%s", sha) or ""
+    if as_json:
+        click.echo(json.dumps({"sha": sha, "subject": subject, "verified": R.verify(rec), "record": rec}, indent=2, ensure_ascii=False))
+        return
     click.echo(json.dumps(rec, indent=2, ensure_ascii=False))
     click.echo(f"# verified: {R.verify(rec)}", err=True)
 
@@ -294,7 +542,14 @@ def show(commit: str) -> None:
 def taint(needle: str, as_json: bool, rev_range: str) -> None:
     """Which commits did an agent write after reading NEEDLE (package, file or sha256)?"""
     root = _root()
-    out = X.query(N.commits(root, rev_range), needle)
+    cs = N.commits(root, rev_range)
+    out = X.query(cs, needle)
+    labels = S.number_sessions(cs, S.base(root))
+    out["session_labels"] = {sid: S.label(labels[sid]) for sid in out["sessions"] if sid in labels}
+    for c in out["affected"]:
+        c["session_label"] = out["session_labels"].get(c["session"], c["session"])
+    if out["first_read"]:
+        out["first_read"]["label"] = out["session_labels"].get(out["first_read"]["session"], out["first_read"]["session"])
     if as_json:
         click.echo(json.dumps(out, indent=2, ensure_ascii=False))
         return
@@ -304,17 +559,25 @@ def taint(needle: str, as_json: bool, rev_range: str) -> None:
         return
     latest_approval = max((c["approved_at"] or "" for c in out["affected"]), default="")
     click.echo(f"{n} commit{'s' if n != 1 else ''} affected")
-    click.echo(f"Sessions: {', '.join(out['sessions']) or '-'}")
+    click.echo(f"Sessions: {', '.join(out['session_labels'].get(x, x) for x in out['sessions']) or '-'}")
     click.echo(f"Files: {', '.join(out['files_written']) or '-'}")
     click.echo(f"Approver: {', '.join(out['approvers']) or '-'} ({_fmt_ts(latest_approval or None)})")
     fr = out["first_read"]
-    click.echo(f"First read: {fr['session']}, {_fmt_ts(fr['at'])}")
+    click.echo(f"First read: session {fr.get('label') or fr['session']}, {_fmt_ts(fr['at'])}")
     click.echo(f"Roll back to: commit {out['rollback_commit'][:7] if out['rollback_commit'] else '-'}")
     click.echo("")
     for c in out["affected"]:
-        click.echo(f"  {c['sha'][:7]}  {c['session'] or '-':22} {c['subject']}")
+        click.echo(f"  {c['sha'][:7]}  {(c.get('session_label') or c['session'] or '-'):6} {c['subject']}")
         for m in c["matched"]:
             click.echo(f"           ↳ {m}")
+
+
+# ----------------------------------------------------------------------------- mcp
+@main.command()
+def mcp() -> None:
+    """Run the Origit MCP server on stdio (tools: origit_taint, origit_show, origit_log). Started by Bob IDE via .bob/mcp.json."""
+    from . import mcp as M
+    M.serve(_root())
 
 
 # ----------------------------------------------------------------------------- export / prefilter
