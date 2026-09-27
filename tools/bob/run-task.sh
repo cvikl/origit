@@ -13,9 +13,10 @@ OUT="$HERE/bob_sessions/$SLUG.json"
 TMP=${ORIGIT_BOB_TMP:-${TMPDIR:-/tmp}/origit-bob}; mkdir -p "$TMP"
 RAW="$TMP/$SLUG.raw"; ERR="$TMP/$SLUG.err"
 MCP_FLAG="--disable-mcp"; [ "${BOB_ENABLE_MCP:-0}" = "1" ] && MCP_FLAG=""
+SUB_FLAG="--disable-subagents"; [ "${BOB_ENABLE_SUBAGENTS:-0}" = "1" ] && SUB_FLAG=""
 cd "$WS"
 bob run --format json --mode "$MODE" --max-cost "${BOB_MAX_COST:-1.5}" --max-turns "${BOB_MAX_TURNS:-30}" \
-  --workspace "$WS" $MCP_FLAG --disable-subagents --accept-license --trust --log-level error "$PROMPT" < /dev/null > "$RAW" 2> "$ERR" || true
+  --workspace "$WS" $MCP_FLAG $SUB_FLAG --accept-license --trust --log-level error "$PROMPT" < /dev/null > "$RAW" 2> "$ERR" || true
 python3 - "$OUT" "$RAW" "$ERR" "$WS" "$MODE" <<'PY'
 import json, sys, time
 out, raw_p, err_p, ws, mode = sys.argv[1:6]

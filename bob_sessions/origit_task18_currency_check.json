@@ -1,0 +1,16 @@
+{
+  "task": "origit_task18_currency_check",
+  "status": "success",
+  "stats": {
+    "task_id": "4e3ee9cbb77d1ca3cbec1edbaa3a26c1",
+    "duration_ms": 43885,
+    "session_costs": 0.21854800000000002,
+    "max_cost": 0.6,
+    "tool_calls": 10
+  },
+  "last_message": "All 34 tests pass. Here's what was done:\n\n**[`src/payment-utils.ts`](src/payment-utils.ts)**  \nAdded a `SUPPORTED_CURRENCIES` set (`EUR`, `GBP`, `USD`) and a guard at the top of [`formatAmount()`](src/payment-utils.ts:8) that throws `Error: Unsupported currency: <code>` for any other value.\n\n**[`src/payment-utils.test.ts`](src/payment-utils.test.ts)**  \nAdded two new tests in the `formatAmount` describe block:\n- throws on an unknown code (`JPY`)\n- throws on an empty string\n\n---\n\n**Origit declaration**\n```\nread:  src/payment-utils.ts, src/payment-utils.test.ts\nwrote: src/payment-utils.ts, src/payment-utils.test.ts\nadded_deps: none\ncommands: npm test\n```",
+  "workspace": "/home/timotej/Documents/bcco/code/origit-demo-payments-api",
+  "mode": "origit-build",
+  "runner": "Bob Shell 2.0.5 (bob run --format json)",
+  "ran_at": "2026-09-27T03:29:01Z"
+}
