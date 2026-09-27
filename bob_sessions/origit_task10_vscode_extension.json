@@ -1,0 +1,12 @@
+{
+  "task": "origit_task10_vscode_extension",
+  "status": "success",
+  "stats": {
+    "task_id": "c80a09980d31aff147719297081a178e",
+    "duration_ms": 125115,
+    "session_costs": 0.57589,
+    "max_cost": 3,
+    "tool_calls": 16
+  },
+  "last_message": "The extension is fully scaffolded and compiles cleanly. Here's a summary of what was created under [`extensions/origit-vscode/`](extensions/origit-vscode/):\n\n---\n\n### Files created\n\n| File | Purpose |\n|---|---|\n| [`package.json`](extensions/origit-vscode/package.json) | Manifest — publisher `origit`, `^1.90.0` engine, SCM view, commands, menus, status-bar configuration |\n| [`tsconfig.json`](extensions/origit-vscode/tsconfig.json) | strict, ES2022, commonjs, `outDir out`, `rootDir src` |\n| [`src/origit.ts`](extensions/origit-vscode/src/origit.ts) | All CLI calls — `fetchLog`, `fetchSessionStatus`, `fetchTaint`, `fetchRecord`; CLI resolution via setting → git config → PATH |\n| [`src/tree.ts`](extensions/origit-vscode/src/tree.ts) | `OrigitTreeProvider` + node types `SessionNode`, `CommitNode`, `GroupNode`, `LeafNode`, `ErrorNode` |\n| [`src/extension.ts`](extensions/origit-vscode/src/extension.ts) | Activation, commands, status bar, FileSystemWatcher, 15-second timer |\n| [`README.md`](extensions/origit-vscode/README.md) | View description, install instructions, config reference, \"no own logic\" statement |\n| [`CHANGELOG.md`](extensions/origit-vscode/CHANGELOG.md) | 0.1.0 entry |\n| [`.vscodeignore`](extensions/origit-vscode/.vscodeignore) | Excludes `src/`, `out/`, `node_modules/` from VSIX |\n\n---\n\n### Design notes\n\n- **No bundler** — plain `tsc`, `main` points to `out/extension.js`.\n- **Tree depth**: Session → Commit (with severity circle / taint error icon) → [Approver leaf, Tests leaf, Record sha256 leaf, Read group, Wrote group, Dependencies group].\n- **Taint**: kept in memory in `currentTaintShas: Set<string>`; `provider.setTaint()` re-renders only commit nodes, `origit.clearTaint` resets. The info banner follows the spec: `\"<n> commits affected · sessions <labels> · roll back to <short sha>\"`.\n- **Status bar** (`$(record)` / `$(circle-outline)`) falls back to reading `.origit/session.json` when the CLI command fails.\n- **Error handling**: any failure in `fetchLog` shows a single `ErrorNode(\"Origit CLI not found: …\")` instead of throwing, so the view never crashes."
+}
