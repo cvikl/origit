@@ -1,7 +1,11 @@
 {
   "task": "origit_task24b_single_payment_export",
-  "status": "no-result (run ended without a result event: max-turns or max-cost reached, or crash; see .err)",
-  "stats": null,
+  "status": "success (work committed; result envelope missing, stats from Bob Shell log)",
+  "stats": {
+    "task_id": "39f80101335e7f3bd60ae4178e220088",
+    "session_costs": 0.536414,
+    "source": "bob-shell-20260927T043836.log"
+  },
   "last_message": null,
   "workspace": "/home/timotej/Documents/bcco/code/overnight/demo",
   "mode": "origit-build",
