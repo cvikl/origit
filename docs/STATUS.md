@@ -18,6 +18,10 @@ Progress is logged below under **Log (Sunday)**; the task table is kept current.
 
 ## Tim's morning checklist (in this order, ~60 min without the video)
 
+**Done overnight (05:10):** the paste-ready form is at `code/submission/form.md` (title, short/long description, both statements, tags, links, checklist). `docs/bob-usage-statement.md` corrected (sessions #42–#47, seventeen commits, two tool calls, coins). Secrets scan of the public repo: clean. Overnight Bob runs (MCP, skill, subagent, review mode, teammate reviews, four feature sessions, a parallel pair) are in `code/overnight/` and `bob_sessions/*.json`; main is frozen at d107c67.
+
+**First:** open the Bob IDE Tasks list; if the overnight Shell runs are listed, screenshot each (zero coins).
+
 1. ✅ done 04:15, redeployed ~04:50 with per-push review — **Deploy the console**: `cd ~/Documents/bcco/code/origit-console && bash deploy/publish.sh` (≈3 min; `.env` already has BOB_API_KEY, GIT_SSH_HOST=git@origit.uk, BOB_MAX_TURNS=8, BOB_TIMEOUT=300). Then:
    ```bash
    set -a; . ~/Documents/bcco/code/origit-console/.env; set +a
