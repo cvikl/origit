@@ -1,0 +1,10 @@
+{
+  "task": "origit_task24b_single_payment_export",
+  "status": "no-result (run ended without a result event: max-turns or max-cost reached, or crash; see .err)",
+  "stats": null,
+  "last_message": null,
+  "workspace": "/home/timotej/Documents/bcco/code/overnight/demo",
+  "mode": "origit-build",
+  "runner": "Bob Shell 2.0.5 (bob run --format json)",
+  "ran_at": "2026-09-27T03:40:03Z"
+}

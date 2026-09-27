@@ -1,0 +1,16 @@
+{
+  "task": "origit_task25_retry_backoff",
+  "status": "success",
+  "stats": {
+    "task_id": "132c60fcb80414cd342c1b96689321d5",
+    "duration_ms": 132071,
+    "session_costs": 0.634494,
+    "max_cost": 0.6,
+    "tool_calls": 21
+  },
+  "last_message": "All 38 tests pass. Here's what changed:\n\n---\n\n### [`src/payout-export.ts`](src/payout-export.ts)\n\n- Added **`withRetry<T>(fn, attempts=3, baseDelayMs=10)`** — loops up to `attempts` times; before each retry waits `baseDelayMs × 2^(i-1)` ms (10 ms, 20 ms for retries 2 and 3).\n- Changed `exportPayouts` from sync to **`async`** — iterates payments in a `for…of` loop and `await`s `withRetry(() => processPayment(p))` for each payment.\n- `scheduleExport` updated to `exportPayouts(...).then(sink)` since the function is now async.\n\n### [`src/payout-export.test.ts`](src/payout-export.test.ts)\n\n- All existing tests converted to `async`/`await`.\n- Mock wired through a hoisted `jest.fn()` (`mockProcessPayment`) so it's controllable per-test.\n- **3 new `withRetry` unit tests**: succeeds on first try, succeeds on 3rd try, exhausts all attempts.\n- **`exportPayouts succeeds when processPayment fails twice then succeeds`**: fake throws on calls 1 & 2, returns the payment on call 3; asserts CSV contains `pay_001` and the mock was called exactly 3 times.\n\n### [`src/payout-export-schedule.test.ts`](src/payout-export-schedule.test.ts)\n\n- Converted to `async` and uses `jest.advanceTimersByTimeAsync` (Jest 29) so the async promise chain inside `scheduleExport` resolves before assertions run.\n\n---\n\n**Origit declaration**\n```\nread:  src/payout-export.ts, src/payout-export.test.ts, src/payout-export-schedule.test.ts,\n       src/types.ts, package.json, packages/fast-pay-utils/2.1.0/package.json\nwrote: src/payout-export.ts, src/payout-export.test.ts, src/payout-export-schedule.test.ts\nadded_deps: none\ncommands: npm test\n```",
+  "workspace": "/home/timotej/Documents/bcco/code/overnight/demo",
+  "mode": "origit-build",
+  "runner": "Bob Shell 2.0.5 (bob run --format json)",
+  "ran_at": "2026-09-27T03:37:48Z"
+}

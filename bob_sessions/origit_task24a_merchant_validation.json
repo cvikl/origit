@@ -1,0 +1,16 @@
+{
+  "task": "origit_task24a_merchant_validation",
+  "status": "success",
+  "stats": {
+    "task_id": "1331b4e0432682cf5a67b3d4b5eaf370",
+    "duration_ms": 44542,
+    "session_costs": 0.31806,
+    "max_cost": 0.5,
+    "tool_calls": 15
+  },
+  "last_message": "---\n\n**What was done**\n\n### [`src/routes.ts`](/home/timotej/Documents/bcco/code/overnight/demo/src/routes.ts:14) — guard tightened\n\nThe existing `!merchantId` check was replaced with an explicit two-part guard:\n\n```ts\ntypeof merchantId !== 'string' || merchantId.trim() === ''\n```\n\n- `typeof merchantId !== 'string'` — rejects missing fields, numbers, booleans, objects, etc.\n- `merchantId.trim() === ''` — rejects empty and whitespace-only strings.\n\n### [`src/routes.test.ts`](/home/timotej/Documents/bcco/code/overnight/demo/src/routes.test.ts:45) — four new tests\n\n| Test | Input | Expected |\n|------|-------|----------|\n| `merchantId` missing | field omitted | 400 |\n| `merchantId` is number | `42` | 400 |\n| `merchantId` is empty string | `''` | 400 |\n| `merchantId` is whitespace-only | `'   '` | 400 |\n\n---\n\n**Origit declaration**\n```\nread:  src/routes.ts, src/routes.test.ts\nwrote: src/routes.ts (line 14, via sed), src/routes.test.ts (appended 4 tests)\nadded_deps: none\ncommands: sed (in-place edit), npm test\n```",
+  "workspace": "/home/timotej/Documents/bcco/code/overnight/demo",
+  "mode": "origit-build",
+  "runner": "Bob Shell 2.0.5 (bob run --format json)",
+  "ran_at": "2026-09-27T03:38:35Z"
+}
