@@ -1,0 +1,16 @@
+{
+  "task": "origit_task26b_parallel_supported_currencies",
+  "status": "success",
+  "stats": {
+    "task_id": "cc678dfad7676ac01fbc7d6ecc7266d4",
+    "duration_ms": 51778,
+    "session_costs": 0.35197400000000006,
+    "max_cost": 0.4,
+    "tool_calls": 16
+  },
+  "last_message": "---\n\n**Summary of changes**\n\n**[`src/types.ts`](/home/timotej/Documents/bcco/code/overnight/demo-b/src/types.ts:1)** — added at the top:\n```ts\nexport const SUPPORTED_CURRENCIES = ['EUR', 'GBP', 'USD'] as const;\n```\n\n**[`src/routes.ts`](/home/timotej/Documents/bcco/code/overnight/demo-b/src/routes.ts:4)** — imported `SUPPORTED_CURRENCIES` and added a guard in [`POST /payments`](/home/timotej/Documents/bcco/code/overnight/demo-b/src/routes.ts:18) after the required-fields check:\n```ts\nif (!SUPPORTED_CURRENCIES.includes(currency as typeof SUPPORTED_CURRENCIES[number])) {\n  res.status(400).json({ error: `currency must be one of ${SUPPORTED_CURRENCIES.join(', ')}` });\n  return;\n}\n```\n\n**[`src/routes.test.ts`](/home/timotej/Documents/bcco/code/overnight/demo-b/src/routes.test.ts:45)** — new test `POST /payments with unsupported currency returns 400` posting `currency: 'JPY'` and asserting `400` + matching error message.\n\n---\n\n**Origit declaration**\n```\nread:  src/types.ts, src/routes.ts, src/routes.test.ts\nwrote: src/types.ts, src/routes.ts, src/routes.test.ts\nadded_deps: none\ncommands:\n  sed -i … src/types.ts        (prepend SUPPORTED_CURRENCIES)\n  sed -i … src/routes.ts       (import + currency guard)\n  cat >> src/routes.test.ts    (new test)\n  npm test\n```",
+  "workspace": "/home/timotej/Documents/bcco/code/overnight/demo-b",
+  "mode": "origit-build",
+  "runner": "Bob Shell 2.0.5 (bob run --format json)",
+  "ran_at": "2026-09-27T03:45:16Z"
+}

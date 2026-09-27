@@ -1,0 +1,16 @@
+{
+  "task": "origit_task26a_parallel_store_docs",
+  "status": "success",
+  "stats": {
+    "task_id": "ade4cef21d2773bc9641ff87e1c2debf",
+    "duration_ms": 54306,
+    "session_costs": 0.289176,
+    "max_cost": 0.4,
+    "tool_calls": 14
+  },
+  "last_message": "Here's what was done:\n\n**[`src/store.ts`](src/store.ts)** — JSDoc added to all four exported functions:\n- [`create()`](src/store.ts:9) — documents the `payment` parameter and return value\n- [`get()`](src/store.ts:18) — documents the `id` parameter and the `undefined` return path\n- [`list()`](src/store.ts:26) — documents that results are in insertion order (matching the existing `clear()` comment style)\n- [`clear()`](src/store.ts:32) — existing comment replaced with a full JSDoc block including the test-only warning\n\n**[`src/store.test.ts`](src/store.test.ts)** — new file with two tests under `describe('list()')`:\n1. Empty store returns `[]`\n2. Three payments inserted as `pay-001 → pay-002 → pay-003` come back in that exact order — verified via index-based assertions on the returned array\n\n---\n\n**Origit declaration**\n```\nread:  src/store.ts, src/store.test.ts (did not exist), src/types.ts, package.json\nwrote: src/store.ts, src/store.test.ts\nadded_deps: none\ncommands: cat > src/store.ts (heredoc), cat > src/store.test.ts (heredoc), npm test\n```",
+  "workspace": "/home/timotej/Documents/bcco/code/overnight/demo",
+  "mode": "origit-build",
+  "runner": "Bob Shell 2.0.5 (bob run --format json)",
+  "ran_at": "2026-09-27T03:45:18Z"
+}
