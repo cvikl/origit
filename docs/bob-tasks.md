@@ -44,6 +44,24 @@ How Bob's commits are made: **automatically.** When a Bob session stops, the Sto
 | B03 ✅ drafted by Bob Shell; Bernard reviews narration in Bob IDE | Ask | `origit_task_b03_demo_script.png` | 1 | Turn "Revised Demo Story" into `docs/demo-script.md`: ≤3 min, ≥90 s of the console/CLI on screen, shot list with timings, narration text, the closing line. |
 | B04 | — | reviewer runs | 10 reserved | Sunday: his `BOB_API_KEY` powers `bob run` reviewer + drafter for the recorded demo. |
 
+
+## Sunday — done headless (Bob Shell, Tim's key), stats in `bob_sessions/*.json`
+
+| id | Workspace / mode | Coins | What Bob did |
+|---|---|---|---|
+| 10 | `origit` (worktree) / agent | see json | Scaffolded `extensions/origit-vscode/` (ORIGIT view, taint command, status bar) |
+| 11 | `origit` / origit-dev | 1.11 | Implemented `origit/origit/mcp.py` against `tests/test_mcp.py` (76 tests green) |
+| 12 | demo repo / origit-build | 0.27 | Session **#48**: settlement retry logic (clean commit, `b4edd9c`) |
+| 13 | demo repo / origit-build | 0.29 | Session **#49**: mask PAN in export logs (propagated taint, `36c384b`) |
+| 14 | `origit` / agent | 0.30 | README section "Origit for Bob IDE" |
+| 15 | demo repo / origit-review | 0.16 | Reviewed HEAD: ten cited ASI categories as JSON (no commit; record under `.origit/runs/`) |
+| 16 | demo repo / ask + MCP | 0.06 | Answered "which commits read fast-pay-utils…" through the Origit MCP tools |
+| console | origit.uk backend / ask | ≈0.05–0.10 each | ASI evidence for every demo commit; Article 14 early-warning draft |
+
+## Sunday — Tim in Bob IDE (screenshots!)
+| 17 | demo repo | 0 | Open the repo with the extension installed; screenshot the ORIGIT view + status bar → `origit_task17_ide_origit_panel.png` |
+| 18 | demo repo / origit-build | ~0.3 | One live run for the video (see `docs/demo-script.md`); screenshot → `origit_task18_live_run.png` |
+
 ## Coin ledger (update after every task)
 
 | Who | Spent | Remaining | Reserved for Sunday demo |
