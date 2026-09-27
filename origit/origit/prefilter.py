@@ -7,8 +7,13 @@ Triggers (each returns a Finding {asi, severity, cwe, evidence, ref}):
   * new dependency present (added_deps non-empty)              -> ASI04 low, CWE-829
   * dependency added without reading its docs                  -> ASI04 medium, CWE-829
   * external read present (read.kind in url|mcp)                -> ASI01 informational, CWE-829
-  * command executed (commands non-empty)                       -> ASI05 informational, CWE-94
-  * agent config changed (.bob/, CLAUDE.md, AGENTS.md, rules, skills) -> ASI01 medium, CWE-829
+  * commands executed are part of the record, not a finding; a command matching a code-execution
+    pattern (fetch piped to a shell, eval, base64 decode to shell, chmod +x, curl|wget to a non-local host) -> ASI05 medium, CWE-94
+  * agent config changed (.bob/, CLAUDE.md, AGENTS.md, rules, skills)
+      by a human                                                  -> ASI06 informational (audit trail), CWE-829
+      by the agent itself                                         -> ASI06 medium, CWE-829
+  * new instructions inside a changed agent-config file (insider or agent): hidden characters,
+    override phrases ("ignore previous instructions", "do not tell the user"), fetch-and-run commands -> ASI01 high, CWE-506/CWE-829
   * invisible / bidi characters in anything the agent read      -> ASI01 high, CWE-506
       Unicode tag block  [\\U000E0000-\\U000E007F]  (decoded and quoted as evidence)
       zero-width         U+200B U+200C U+200D U+2060 U+FEFF
@@ -87,21 +92,64 @@ def rule_external_read(record: dict[str, Any], *_: Any) -> list[dict[str, Any]]:
     ]
 
 
+DANGEROUS_CMD_RE = re.compile(
+    r"(curl|wget)[^|\n]*\|\s*(ba|z|k|da)?sh\b"          # fetch piped to a shell
+    r"|\beval\b"
+    r"|base64\s+(-d|--decode)[^|\n]*\|\s*(ba|z|k|da)?sh\b"
+    r"|\bchmod\s+\+x\b"
+    r"|\brm\s+-rf?\s+/(\s|$)"                             # destructive: wipe from root
+    r"|\b(curl|wget)\b(?![^\n]*(localhost|127\.0\.0\.1))[^\n]*https?://",  # network fetch to a non-local host
+    re.I,
+)
+OVERRIDE_RE = re.compile(
+    r"ignore (all )?(previous|prior|above|earlier) instructions|do not (tell|inform|mention to) the (user|human)|"
+    r"without (telling|informing) the (user|human)|(curl|wget)[^\n]*\|\s*(ba|z)?sh\b|exfiltrat|send .{0,40}(env|secrets?|credentials?) to",
+    re.I,
+)
+
+
 def rule_commands(record: dict[str, Any], *_: Any) -> list[dict[str, Any]]:
-    cmds = record.get("commands", [])
-    if not cmds:
-        return []
-    return [_f("ASI05", "informational", "CWE-94", f"agent executed {len(cmds)} shell command(s): " + "; ".join(cmds[:5]))]
+    """Commands are evidence in the record (``commands[]``), not a finding by themselves. Only a command that looks like
+    code execution from untrusted input is flagged (ASI05 medium). Test runs, installs and file edits stay silent."""
+    return [
+        _f("ASI05", "medium", "CWE-94", f"command matches a code-execution pattern: {c.strip()[:160]}", c.strip()[:80])
+        for c in record.get("commands", []) if DANGEROUS_CMD_RE.search(c)
+    ]
 
 
 def rule_agent_config_changed(record: dict[str, Any], changed_files: list[str], *_: Any) -> list[dict[str, Any]]:
+    """Changes to what the agent obeys are always recorded. A human maintaining the config is an audit-trail entry
+    (informational); an agent rewriting its own instructions is ASI06 medium."""
+    human = record.get("actor", {}).get("kind") == "human"
+    who = "human" if human else "the agent itself"
     return [
-        _f("ASI01", "medium", "CWE-829", f"agent configuration file changed in this commit: {p}", p)
+        _f("ASI06", "informational" if human else "medium", "CWE-829", f"agent configuration changed by {who}: {p}", p)
         for p in changed_files if AGENT_CONFIG_RE.search(p)
     ]
 
 
-def rule_hidden_text(record: dict[str, Any], changed_files: list[str], read_texts: dict[str, str]) -> list[dict[str, Any]]:
+def rule_config_instructions(record: dict[str, Any], changed_files: list[str], read_texts: dict[str, str], changed_texts: dict[str, str] | None = None, *_: Any) -> list[dict[str, Any]]:
+    """New instructions inside a changed agent-config file — the malicious-insider (or self-modifying agent) case.
+    Needs the content of the changed files (``changed_texts``: path -> text after the change)."""
+    out = []
+    for p, text in (changed_texts or {}).items():
+        if not AGENT_CONFIG_RE.search(p) or not text:
+            continue
+        hidden = has_hidden_text(text)
+        if hidden:
+            decoded = decode_unicode_tags(text)
+            ev = f"hidden characters in agent configuration ({', '.join(f'{k}={v}' for k, v in hidden.items())})"
+            if decoded:
+                ev += f'; decoded: "{decoded[:200]}"'
+            out.append(_f("ASI01", "high", "CWE-506", ev, p))
+        m = OVERRIDE_RE.search(text)
+        if m:
+            line = next((l.strip() for l in text.splitlines() if m.group(0) in l), m.group(0))
+            out.append(_f("ASI01", "high", "CWE-829", f'instruction in agent configuration that overrides or hides behaviour: "{line[:200]}"', p))
+    return out
+
+
+def rule_hidden_text(record: dict[str, Any], changed_files: list[str], read_texts: dict[str, str], *_: Any) -> list[dict[str, Any]]:
     out = []
     for ref, text in read_texts.items():
         hidden = has_hidden_text(text)
@@ -139,14 +187,16 @@ def rule_dependency_not_read(record: dict[str, Any], *_: Any) -> list[dict[str, 
             ))
     return out
 
-RULES = [rule_new_dependency, rule_external_read, rule_commands, rule_agent_config_changed, rule_hidden_text, rule_secrets_touched, rule_dependency_not_read]
+RULES = [rule_new_dependency, rule_external_read, rule_commands, rule_agent_config_changed, rule_config_instructions, rule_hidden_text, rule_secrets_touched, rule_dependency_not_read]
 
 
-def run(record: dict[str, Any], changed_files: list[str] | None = None, read_texts: dict[str, str] | None = None) -> list[dict[str, Any]]:
-    """Apply every rule. Returns findings sorted by severity (highest first) then ASI code."""
+def run(record: dict[str, Any], changed_files: list[str] | None = None, read_texts: dict[str, str] | None = None,
+        changed_texts: dict[str, str] | None = None) -> list[dict[str, Any]]:
+    """Apply every rule. ``changed_texts`` (path -> content after the commit) enables the config-instruction rule.
+    Returns findings sorted by severity (highest first) then ASI code."""
     changed_files = changed_files or []
     read_texts = read_texts or {}
-    findings = [f for rule in RULES for f in rule(record, changed_files, read_texts)]
+    findings = [f for rule in RULES for f in rule(record, changed_files, read_texts, changed_texts or {})]
     findings.sort(key=lambda f: (-SEVERITIES.index(f["severity"]), f["asi"]))
     return findings
 
