@@ -1,6 +1,6 @@
 # Origit for Bob IDE
 
-A VS Code extension that surfaces [Origit](https://github.com/origit) agent-provenance data directly in the Source Control panel.
+A VS Code extension that surfaces [Origit](https://github.com/cvikl/origit) agent-provenance data directly in the Source Control panel.
 
 ## What the view shows
 
@@ -12,12 +12,12 @@ Open the **Source Control** panel (`Ctrl+Shift+G`) and expand the **ORIGIT** sec
 | **Commit / run** | `a1b2c3d fix: payment logic` with a severity circle and `n read · n wrote · n deps` |
 | **Details** | Approver, test summary, record sha256, and expandable Read / Wrote / Dependencies groups |
 
-Use **Origit: Taint…** (`origit.taint`) to trace which commits are reachable from a package, file, or sha256. Affected commits are marked with a red ✖ icon in the tree and an information banner shows the count, sessions, and earliest SHA to roll back to. Use **Origit: Clear taint** to reset.
+Use **Origit: Taint…** (`origit.taint`) to trace which commits are reachable from a package, file, or sha256. Affected commits are marked with a red ✖ icon in the tree and an information message shows the count, the session labels and the last clean commit to roll back to. Use **Origit: Clear taint** to reset.
 
 ## Installation
 
 1. Download the `.vsix` package.
-2. In VS Code open the Extensions panel, click **…** → **Install from VSIX…**, and select the file.
+2. In Bob IDE (or VS Code) open the Extensions panel, click **…** → **Install from VSIX…**, and select the file.
 3. Reload the window when prompted.
 
 The extension activates automatically when the workspace contains `.origit/**` files, or when the ORIGIT view is opened.
