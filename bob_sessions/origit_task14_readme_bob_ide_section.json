@@ -1,0 +1,16 @@
+{
+  "task": "origit_task14_readme_bob_ide_section",
+  "status": "success",
+  "stats": {
+    "task_id": "20c6acf736d300da2087cf80cd639290",
+    "duration_ms": 96082,
+    "session_costs": 0.299002,
+    "max_cost": 1.2,
+    "tool_calls": 11
+  },
+  "last_message": "Done. Here is a summary of every change made to [`README.md`](README.md):\n\n---\n\n### Commands table (`## What it does`)\nThree rows added between `origit record` and `origit log`:\n- `origit session start / status` — opens/inspects the recording session\n- `origit run start / end` — brackets one Bob run (one commit)\n- `origit log --json` — machine-readable session log\n- `origit mcp` — starts the MCP server (inserted before `origit export`)\n\n### Section replacement\n`## How IBM Bob is used` (five bullet points) replaced with `## Origit for Bob IDE` (six subsections):\n\n1. **Session manager** — hooks table (`SessionStart → origit session start`, `UserPromptSubmit → origit run start`, `PostToolUse → origit trace`, `Stop → origit run end`), the *one run = one commit = one record* rule, the `bob: <prompt> [session #42 run 1]` subject format, human-edits handling, `.origit/runs/` fallback, and the failed-tests-recorded-not-gated principle.\n\n2. **Modes** — `origit-build` (edits limited to `src/**`, declaration at end of task, no manual commit) and `origit-review` (read-only, cited ASI01–ASI10 evidence JSON, invoked with `Review commit HEAD with Origit`).\n\n3. **MCP server** — verbatim `.bob/mcp.json` block, `origit mcp` stdio/JSON-RPC 2.0 description, tools table (`origit_taint`, `origit_show`, `origit_log`), example chat question.\n\n4. **/origit skill** — [`SKILL.md`](origit/origit/templates/bob/skills/origit/SKILL.md) behaviour: MCP-first, fallback to CLI, taint report fields, mandatory \"not confirmed compromise\" qualifier, no record mutation.\n\n5. **VS Code extension** — ORIGIT sidebar view (sessions → runs → reads/writes/deps/hash, severity dot), Taint… command, status bar item, `.vsix` install path; all data sourced from `origit log/show/taint --json`.\n\n6. **How IBM Bob is used** — closing table with rows Actor, Tracer, Reviewer, Drafter, Builder (no \"proves safe\", no \"guarantees\").\n\n### Intro anchor\nUpdated `#how-ibm-bob-is-used` → `#origit-for-bob-ide` to match the renamed section heading.",
+  "workspace": "/home/timotej/Documents/bcco/code/origit-wt-bob",
+  "mode": "agent",
+  "runner": "Bob Shell 2.0.5 (bob run --format json)",
+  "ran_at": "2026-09-27T01:18:08Z"
+}
