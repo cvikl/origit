@@ -6,7 +6,7 @@ Never commit `.env` or any key file.
 
 ## Final-day plan (started Sun 02:05 BST, Claude working unattended while Tim sleeps)
 
-Split: **A** core session manager (Claude) · **B** Bob IDE extension (Bob Shell builds, Claude reviews and packages) · **C** Business plan: Bob Review on push + real Art. 14 draft (Claude wires, Bob runs) · **D** Bob usage log (every Bob run → `bob_sessions/*.json`; IDE PNGs need humans) · **E** consistency + submission package.
+Split: **A** core session manager (Claude) · **B** Bob IDE extension (Bob Shell builds, Claude reviews and packages) · **C** Business plan: Bob Review on push + real Art. 14 draft (Claude wires, Bob runs) · **D** Bob usage log (every Bob run → `bob_sessions/headless/*.json`; IDE PNGs need humans) · **E** consistency + submission package.
 
 1. A: `origit session start` / `run start` / `trace` / `run end` (auto-commit, `bob: <prompt> [session #n run m]`), human edits between runs committed as `actor: human`, session display ids `#42…` stored in the record, `origit log --json` grouped by session/run, `show --json`, `init` writes hooks + `mcp.json` + `/origit` skill + `origit-review` mode. Tests.
 2. B: Bob Shell scaffolds `extensions/origit-vscode/` (ORIGIT view in Source Control, `Origit: Taint…`, status bar) in a git worktree; packaged to `.vsix`; installed into Bob IDE from the CLI if it accepts it. **Tim: open the demo repo in Bob IDE and screenshot the panel** (video opener).
@@ -18,7 +18,7 @@ Progress is logged below under **Log (Sunday)**; the task table is kept current.
 
 ## Tim's morning checklist (in this order, ~60 min without the video)
 
-**Done overnight (05:10):** the paste-ready form is at `code/submission/form.md` (title, short/long description, both statements, tags, links, checklist). `docs/bob-usage-statement.md` corrected (sessions #42–#47, seventeen commits, two tool calls, coins). Secrets scan of the public repo: clean. Overnight Bob runs (MCP, skill, subagent, review mode, teammate reviews, four feature sessions, a parallel pair) are in `code/overnight/` and `bob_sessions/*.json`; main is frozen at d107c67.
+**Done overnight (05:10):** the paste-ready form is at `code/submission/form.md` (title, short/long description, both statements, tags, links, checklist). `docs/bob-usage-statement.md` corrected (sessions #42–#47, seventeen commits, two tool calls, coins). Secrets scan of the public repo: clean. Overnight Bob runs (MCP, skill, subagent, review mode, teammate reviews, four feature sessions, a parallel pair) are in `code/overnight/` and `bob_sessions/headless/*.json`; main is frozen at d107c67.
 
 **First:** open the Bob IDE Tasks list; if the overnight Shell runs are listed, screenshot each (zero coins).
 
@@ -56,7 +56,7 @@ Progress is logged below under **Log (Sunday)**; the task table is kept current.
 - 03:40 Product repo pushed to GitHub (main + `refs/notes/origit`). Demo evidence pack regenerated; submodule at `6d4d325`.
 - 03:40 Coins today (Tim's key): tasks 10–16 = 0.58 + 1.11 + 0.27 + 0.29 + 0.30 + 0.16 + 0.06 = **2.8**; console reviews ≈ 0.05–0.10 × 16 ≈ **1.3**; Art. 14 draft ≈ 0.1. Roughly **33 coins left** before the video.
 - 02:55 **Track A done.** `origit session start / run start / trace / run end`, human edits committed as `human:` between runs, display ids `#42…` in every new record (`.origit/config.json` sets the base), `origit log` grouped by session/run (`--json`), `show/taint --json`, `init` installs `origit-review` mode + `mcp.json` + `/origit` skill. 76 core tests green. Proven live with Bob Shell in the demo repo: sessions **#48** (retry logic, clean) and **#49** (mask PAN in logs, propagated taint) auto-committed with `[session #n run 1]`, tests 26/26 and 32/32 parsed into the records; a no-change run (#50, review mode) stored its record under `.origit/runs/`.
-- 02:55 **Bob built** (Bob Shell, stats in `bob_sessions/*.json`): MCP server `origit mcp` (task 11, 1.11 coins, 76 tests green), README "Origit for Bob IDE" (task 14, 0.30), demo sessions #48/#49 (tasks 12–13, 0.27 + 0.29), `origit-review` mode run on HEAD (task 15, 0.16: ten cited categories), VS Code extension (task 10, in progress).
+- 02:55 **Bob built** (Bob Shell, stats in `bob_sessions/headless/*.json`): MCP server `origit mcp` (task 11, 1.11 coins, 76 tests green), README "Origit for Bob IDE" (task 14, 0.30), demo sessions #48/#49 (tasks 12–13, 0.27 + 0.29), `origit-review` mode run on HEAD (task 15, 0.16: ten cited categories), VS Code extension (task 10, in progress).
 - 02:55 **Console** (origit-console `ff67c45`): Bob Review on push (post-receive → background `bob run` per new commit), `review-all` + `review-status` endpoints, session labels everywhere, taint "also touched" split, honest Bob pill, real landing numbers, Business wording, seed script; 21 backend tests green. **Not deployed: the deploy command is blocked for Claude in auto mode (production deploy). Tim runs it, see "Tim's morning checklist".**
 - 02:55 Reviews of all demo commits + the Art. 14 draft are being produced locally through the console (Tim's key) and shipped as `seed/` so the deployed console shows them immediately.
 - 02:05 Plan written. Baseline: core 61 tests green; demo repo 23 Jest tests green; console live at origit.uk (13 commits, 12 records, plan=free, Bob key not configured on the server).
@@ -80,7 +80,7 @@ Progress is logged below under **Log (Sunday)**; the task table is kept current.
 | 10 | Video, slides, submit | all | 10 reserved each | Sun 12–14 |
 
 ## Coin ledger (Tim's account)
-- IDE tasks T01–T06: 3.9 · Shell: T07 0.08, B01 (statements, 20 turns) ~8.8?, B03 0.15, J04 ~1.1 — exact figures in `bob_sessions/*.json` (`stats.session_costs`). Check the Bob web portal balance before Sunday; reserve 10.
+- IDE tasks T01–T06: 3.9 · Shell: T07 0.08, B01 (statements, 20 turns) ~8.8?, B03 0.15, J04 ~1.1 — exact figures in `bob_sessions/headless/*.json` (`stats.session_costs`). Check the Bob web portal balance before Sunday; reserve 10.
 
 ## How a Bob task becomes a commit (current flow)
 1. Run the task: in Bob IDE (workspace = the repo) or headless with `tools/bob/run-task.sh <workspace> <mode> <slug> "<prompt>"` (stats land in `bob_sessions/<slug>.json`).

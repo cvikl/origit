@@ -11,4 +11,4 @@ Take the screenshot **as you go**, right after each task. Do not batch them for 
 
 ## Headless runs (Bob Shell)
 
-Tasks run through Bob Shell (`tools/bob/run-task.sh`) have no IDE screenshot; each leaves `origit_taskNN_<desc>.json` here with the Bob task id, Bobcoin cost, duration and tool-call count from Bob's own result envelope, plus the mode and workspace. Bob Shell shares tasks with connected editors, so these runs may also appear in the Bob IDE Tasks list for a screenshot.
+Tasks run through Bob Shell (`tools/bob/run-task.sh`) have no IDE screenshot; each leaves `headless/origit_taskNN_<desc>.json` with the Bob task id, Bobcoin cost, duration and tool-call count from Bob's own result envelope, plus the mode and workspace. Bob Shell shares tasks with connected editors, so these runs may also appear in the Bob IDE Tasks list for a screenshot.

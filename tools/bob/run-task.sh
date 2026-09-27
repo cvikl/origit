@@ -9,7 +9,7 @@ HERE=$(cd "$(dirname "$0")/../.." && pwd)
 export PATH="$HOME/.nvm/versions/node/v24.21.0/bin:$PATH"
 export CHOKIDAR_USEPOLLING=1 CHOKIDAR_INTERVAL=2000
 [ -n "$BOB_API_KEY" ] || export BOB_API_KEY=$(python3 -c "import json,os; print(json.load(open(os.path.expanduser('~/Downloads/bob-tim.json')))['apikey'])")
-OUT="$HERE/bob_sessions/$SLUG.json"
+OUT="$HERE/bob_sessions/headless/$SLUG.json"
 TMP=${ORIGIT_BOB_TMP:-${TMPDIR:-/tmp}/origit-bob}; mkdir -p "$TMP"
 RAW="$TMP/$SLUG.raw"; ERR="$TMP/$SLUG.err"
 MCP_FLAG="--disable-mcp"; [ "${BOB_ENABLE_MCP:-0}" = "1" ] && MCP_FLAG=""
