@@ -17,6 +17,10 @@ Split: **A** core session manager (Claude) · **B** Bob IDE extension (Bob Shell
 Progress is logged below under **Log (Sunday)**; the task table is kept current.
 
 ## Log (Sunday)
+- 02:55 **Track A done.** `origit session start / run start / trace / run end`, human edits committed as `human:` between runs, display ids `#42…` in every new record (`.origit/config.json` sets the base), `origit log` grouped by session/run (`--json`), `show/taint --json`, `init` installs `origit-review` mode + `mcp.json` + `/origit` skill. 76 core tests green. Proven live with Bob Shell in the demo repo: sessions **#48** (retry logic, clean) and **#49** (mask PAN in logs, propagated taint) auto-committed with `[session #n run 1]`, tests 26/26 and 32/32 parsed into the records; a no-change run (#50, review mode) stored its record under `.origit/runs/`.
+- 02:55 **Bob built** (Bob Shell, stats in `bob_sessions/*.json`): MCP server `origit mcp` (task 11, 1.11 coins, 76 tests green), README "Origit for Bob IDE" (task 14, 0.30), demo sessions #48/#49 (tasks 12–13, 0.27 + 0.29), `origit-review` mode run on HEAD (task 15, 0.16: ten cited categories), VS Code extension (task 10, in progress).
+- 02:55 **Console** (origit-console `ff67c45`): Bob Review on push (post-receive → background `bob run` per new commit), `review-all` + `review-status` endpoints, session labels everywhere, taint "also touched" split, honest Bob pill, real landing numbers, Business wording, seed script; 21 backend tests green. **Not deployed: the deploy command is blocked for Claude in auto mode (production deploy). Tim runs it, see "Tim's morning checklist".**
+- 02:55 Reviews of all demo commits + the Art. 14 draft are being produced locally through the console (Tim's key) and shipped as `seed/` so the deployed console shows them immediately.
 - 02:05 Plan written. Baseline: core 61 tests green; demo repo 23 Jest tests green; console live at origit.uk (13 commits, 12 records, plan=free, Bob key not configured on the server).
 
 ## Now (Sat 26 Sep, 12:45 BST)
