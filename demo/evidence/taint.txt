@@ -1,19 +1,33 @@
-3 commits affected
-Sessions: 4c4a5dc6311bb162598cec05f410a558, 94d788ea8a60c055b001b210820462e6, ef74353172505a674f0bf4e712500d7e
-Files: jest.config.js, node_modules/fast-pay-utils/dist/index.d.ts, src/payment-utils.test.ts, src/payment-utils.ts, src/payout-export-schedule.test.ts, src/payout-export.test.ts, src/payout-export.ts
-Approver: bernard (2026-09-26 14:00 UTC)
-First read: ef74353172505a674f0bf4e712500d7e, 2026-09-26 13:21 UTC
+7 commits affected
+Sessions: #42, #43, #44, #45, #46, #47, #49
+Files: jest.config.js, node_modules/fast-pay-utils/dist/index.d.ts, packages/fast-pay-utils/ADVISORY.md, src/payment-utils.test.ts, src/payment-utils.ts, src/payout-export-schedule.test.ts, src/payout-export.test.ts, src/payout-export.ts
+Approver: bernard (2026-09-27 01:16 UTC)
+First read: session #42, 2026-09-26 13:21 UTC
 Roll back to: commit 17c436c
 
-  d5a4643  4c4a5dc6311bb162598cec05f410a558 feat: scheduled payout export (session C) [bob task 06]
+  36c384b  #49    bob: Mask the PAN in payout export logs. [session #49 run 1]
            ↳ propagated:src/payment-utils.ts
            ↳ propagated:src/payout-export.test.ts
            ↳ propagated:src/payout-export.ts
-  d8f549f  94d788ea8a60c055b001b210820462e6 feat: Session B — add payment-utils and refactor payout-export to use them
+  ee4539f  #47    bob: In src/payout-export.ts, skip any payment whose PAN fails validatePan fr
+           ↳ propagated:src/payment-utils.ts
+           ↳ propagated:src/payout-export.test.ts
+           ↳ propagated:src/payout-export.ts
+  343d6b0  #46    bob: All 22 tests pass
+           ↳ propagated:src/payment-utils.ts
+  d899879  #45    docs: GHSA-style advisory for fast-pay-utils 2.1.0 (synthetic) [bob task J01, Bob Shell]
+           ↳ read:file:packages/fast-pay-utils/2.1.0/README.md
+           ↳ read:file:packages/fast-pay-utils/2.1.0/src/index.ts
+           ↳ read:file:packages/fast-pay-utils/README.md
+  d5a4643  #44    feat: scheduled payout export (session C) [bob task 06]
+           ↳ propagated:src/payment-utils.ts
+           ↳ propagated:src/payout-export.test.ts
+           ↳ propagated:src/payout-export.ts
+  d8f549f  #43    feat: Session B — add payment-utils and refactor payout-export to use them
            ↳ read:file:node_modules/fast-pay-utils/README.md
            ↳ propagated:src/payout-export.test.ts
            ↳ propagated:src/payout-export.ts
-  ac31928  ef74353172505a674f0bf4e712500d7e feat: payout export via fast-pay-utils@2.1.0 (session A) [bob task 03]
+  ac31928  #42    feat: payout export via fast-pay-utils@2.1.0 (session A) [bob task 03]
            ↳ added_deps:fast-pay-utils@2.1.0
            ↳ read:file:node_modules/fast-pay-utils/**/*
            ↳ read:file:node_modules/fast-pay-utils/README.md

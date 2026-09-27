@@ -2,6 +2,72 @@
   "needle": "fast-pay-utils",
   "affected": [
     {
+      "sha": "36c384bd1ad0351e6f358ce4bef9d8b709887b4d",
+      "subject": "bob: Mask the PAN in payout export logs. [session #49 run 1]",
+      "session": "b9c6082e8d9f0b11f009ac1c0a686bc1",
+      "actor": "bob-ide",
+      "approver": "bernard",
+      "approved_at": "2026-09-27T01:16:39Z",
+      "wrote": [
+        "src/payout-export.test.ts",
+        "src/payout-export.ts"
+      ],
+      "matched": [
+        "propagated:src/payment-utils.ts",
+        "propagated:src/payout-export.test.ts",
+        "propagated:src/payout-export.ts"
+      ],
+      "session_label": "#49"
+    },
+    {
+      "sha": "ee4539ff0ee8d2c3d7ddb12ab0d1bf4caf1bf3b3",
+      "subject": "bob: In src/payout-export.ts, skip any payment whose PAN fails validatePan fr",
+      "session": "de87a367b37f1697f8d4e75353663c9c",
+      "actor": "bob-ide",
+      "approver": "bernard",
+      "approved_at": "2026-09-26T15:53:06Z",
+      "wrote": [
+        "src/payout-export.test.ts",
+        "src/payout-export.ts"
+      ],
+      "matched": [
+        "propagated:src/payment-utils.ts",
+        "propagated:src/payout-export.test.ts",
+        "propagated:src/payout-export.ts"
+      ],
+      "session_label": "#47"
+    },
+    {
+      "sha": "343d6b05fc6faf4cd3788103a957037a8de0de33",
+      "subject": "bob: All 22 tests pass",
+      "session": "a0fc234652378e28ee0d3aadca449ead",
+      "actor": "bob-ide",
+      "approver": "bernard",
+      "approved_at": "2026-09-26T15:46:26Z",
+      "wrote": [],
+      "matched": [
+        "propagated:src/payment-utils.ts"
+      ],
+      "session_label": "#46"
+    },
+    {
+      "sha": "d899879a31ef9dde2406d2ed1649c65458074737",
+      "subject": "docs: GHSA-style advisory for fast-pay-utils 2.1.0 (synthetic) [bob task J01, Bob Shell]",
+      "session": "0644f6a51ecf88fbdb0d09b6831a9073",
+      "actor": "bob-ide",
+      "approver": "bernard",
+      "approved_at": "2026-09-26T14:52:00Z",
+      "wrote": [
+        "packages/fast-pay-utils/ADVISORY.md"
+      ],
+      "matched": [
+        "read:file:packages/fast-pay-utils/2.1.0/README.md",
+        "read:file:packages/fast-pay-utils/2.1.0/src/index.ts",
+        "read:file:packages/fast-pay-utils/README.md"
+      ],
+      "session_label": "#45"
+    },
+    {
       "sha": "d5a464339cd88b3f2f1300c32ac5bf83a3b20ccb",
       "subject": "feat: scheduled payout export (session C) [bob task 06]",
       "session": "4c4a5dc6311bb162598cec05f410a558",
@@ -16,7 +82,8 @@
         "propagated:src/payment-utils.ts",
         "propagated:src/payout-export.test.ts",
         "propagated:src/payout-export.ts"
-      ]
+      ],
+      "session_label": "#44"
     },
     {
       "sha": "d8f549f0bf66d73b3c3d6a2e9e6460246325c313",
@@ -35,7 +102,8 @@
         "read:file:node_modules/fast-pay-utils/README.md",
         "propagated:src/payout-export.test.ts",
         "propagated:src/payout-export.ts"
-      ]
+      ],
+      "session_label": "#43"
     },
     {
       "sha": "ac319287a108dd95749e31d6029226887417e4e7",
@@ -55,17 +123,23 @@
         "read:file:node_modules/fast-pay-utils/**/*",
         "read:file:node_modules/fast-pay-utils/README.md",
         "read:pkg:fast-pay-utils@2.1.0"
-      ]
+      ],
+      "session_label": "#42"
     }
   ],
   "sessions": [
+    "0644f6a51ecf88fbdb0d09b6831a9073",
     "4c4a5dc6311bb162598cec05f410a558",
     "94d788ea8a60c055b001b210820462e6",
+    "a0fc234652378e28ee0d3aadca449ead",
+    "b9c6082e8d9f0b11f009ac1c0a686bc1",
+    "de87a367b37f1697f8d4e75353663c9c",
     "ef74353172505a674f0bf4e712500d7e"
   ],
   "files_written": [
     "jest.config.js",
     "node_modules/fast-pay-utils/dist/index.d.ts",
+    "packages/fast-pay-utils/ADVISORY.md",
     "src/payment-utils.test.ts",
     "src/payment-utils.ts",
     "src/payout-export-schedule.test.ts",
@@ -78,10 +152,27 @@
   "first_read": {
     "session": "ef74353172505a674f0bf4e712500d7e",
     "at": "2026-09-26T13:21:14Z",
-    "commit": "ac319287a108dd95749e31d6029226887417e4e7"
+    "commit": "ac319287a108dd95749e31d6029226887417e4e7",
+    "label": "#42"
   },
   "rollback_commit": "17c436c99d90c6bbe1b57c6c46178099225d5983",
   "clean": [
+    {
+      "sha": "b4edd9c2f5d6950013c2ce6b8002d5795ea4b728",
+      "subject": "bob: Read src/types.ts, src/store.ts and src/routes.ts with read_fil… [session #48 run 1]"
+    },
+    {
+      "sha": "f896e6785db062fb75a2447600adaef2f7e523fe",
+      "subject": "chore: Origit session manager — hooks call session start / run start / trace / run end; origit-review mode, MCP server, /origit skill; sessions numbered from #42"
+    },
+    {
+      "sha": "b6793c9be0981bfb984d8a07ac3a257c3eaf9832",
+      "subject": "chore: trace the task prompt (UserPromptSubmit hook)"
+    },
+    {
+      "sha": "139b1ff891038e1b866a85e9a8beeaabe714d229",
+      "subject": "chore: Origit session auto-commit hook (one Bob session = one commit)"
+    },
     {
       "sha": "3ccfc39dd7ccab90114b88866f452603910a2a15",
       "subject": "feat: GET /health endpoint [bob task 04]"
@@ -102,5 +193,14 @@
       "sha": "ad59f7b379b1321495348d2f7411f36ebff332e5",
       "subject": "chore: demo repo scaffold, vendored fast-pay-utils 2.0.0 (clean) and 2.1.0 (compromised, synthetic)"
     }
-  ]
+  ],
+  "session_labels": {
+    "0644f6a51ecf88fbdb0d09b6831a9073": "#45",
+    "4c4a5dc6311bb162598cec05f410a558": "#44",
+    "94d788ea8a60c055b001b210820462e6": "#43",
+    "a0fc234652378e28ee0d3aadca449ead": "#46",
+    "b9c6082e8d9f0b11f009ac1c0a686bc1": "#49",
+    "de87a367b37f1697f8d4e75353663c9c": "#47",
+    "ef74353172505a674f0bf4e712500d7e": "#42"
+  }
 }

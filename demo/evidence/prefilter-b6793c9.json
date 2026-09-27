@@ -1,0 +1,14 @@
+{
+  "commit": "b6793c9be0981bfb984d8a07ac3a257c3eaf9832",
+  "needs_review": true,
+  "findings": [
+    {
+      "asi": "ASI01",
+      "title": "Agent Goal Hijack",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent configuration file changed in this commit: .bob/settings.json",
+      "ref": ".bob/settings.json"
+    }
+  ]
+}

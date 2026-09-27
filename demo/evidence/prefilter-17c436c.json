@@ -5,6 +5,78 @@
     {
       "asi": "ASI04",
       "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency @types/express@4.17.21 without reading its documentation",
+      "ref": "@types/express@4.17.21"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency @types/jest@29.5.14 without reading its documentation",
+      "ref": "@types/jest@29.5.14"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency @types/node@22.10.2 without reading its documentation",
+      "ref": "@types/node@22.10.2"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency @types/supertest@6.0.2 without reading its documentation",
+      "ref": "@types/supertest@6.0.2"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency express@4.21.2 without reading its documentation",
+      "ref": "express@4.21.2"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency jest@29.7.0 without reading its documentation",
+      "ref": "jest@29.7.0"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency supertest@7.0.0 without reading its documentation",
+      "ref": "supertest@7.0.0"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency ts-jest@29.2.5 without reading its documentation",
+      "ref": "ts-jest@29.2.5"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent added dependency typescript@5.6.3 without reading its documentation",
+      "ref": "typescript@5.6.3"
+    },
+    {
+      "asi": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
       "severity": "low",
       "cwe": "CWE-829",
       "evidence": "agent added dependency @types/express@4.17.21 (npm)",

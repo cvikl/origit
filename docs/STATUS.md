@@ -16,6 +16,24 @@ Split: **A** core session manager (Claude) · **B** Bob IDE extension (Bob Shell
 
 Progress is logged below under **Log (Sunday)**; the task table is kept current.
 
+## Tim's morning checklist (in this order, ~60 min without the video)
+
+1. **Deploy the console** (blocked for Claude): `cd ~/Documents/bcco/code/origit-console && bash deploy/publish.sh` (≈3 min; `.env` already has BOB_API_KEY, GIT_SSH_HOST=git@origit.uk, BOB_MAX_TURNS=8, BOB_TIMEOUT=300). Then:
+   ```bash
+   set -a; . ~/Documents/bcco/code/origit-console/.env; set +a
+   curl -s https://origit.uk/api/health                       # expect "api_key": true
+   curl -s -X POST https://origit.uk/api/acme-payments/payments-api/plan -H "X-Origit-Token: $CONSOLE_TOKEN" -H 'Content-Type: application/json' -d '{"plan":"enterprise"}'
+   cd ~/Documents/bcco/code/origit-demo-payments-api && git push origit main refs/notes/origit   # post-receive → Bob Review on push for the new commits
+   curl -s https://origit.uk/api/acme-payments/payments-api/review-status | python3 -m json.tool | head -40   # seeded evidence shows reviewed=true immediately
+   ```
+   If any commit says `reviewed: false` after a minute: `curl -s -X POST https://origit.uk/api/acme-payments/payments-api/review-all -H "X-Origit-Token: $CONSOLE_TOKEN"`.
+2. **Bob IDE**: open `code/origit-demo-payments-api`. The extension should already be installed (`/usr/share/bobide/bin/bobide --list-extensions | grep origit`); if not: Extensions → ··· → Install from VSIX → `code/origit/extensions/origit-vscode/origit-vscode-0.1.0.vsix`. Check Source Control → **ORIGIT** view and the status bar item. Screenshot → `bob_sessions/origit_task17_ide_origit_panel.png`.
+3. **One live Bob run in the IDE** (`origit-build`, ~0.3 coins) so the video shows the auto-commit: e.g. "Add a currency check to formatAmount in src/payment-utils.ts: throw on unknown currency; test." Watch the commit `bob: … [session #51 run 1]` appear. Task screenshot → `bob_sessions/origit_task18_live_run.png`.
+4. **Video** per `docs/demo-script.md` (≤ 3:00, solution on screen ≥ 90 s). **Deck** per `docs/deck-fixes.md` (Bernard). **Statements** per `docs/statements-check.md` and `docs/bob-usage-statement.md`.
+5. **Bernard and Jeremy**: ≥ 2 Bob IDE tasks each on the repo, PNGs into `bob_sessions/` (prompts in `docs/bob-tasks.md`; e.g. Bernard "Review docs/bob-usage-statement.md against docs/positioning.md", Jeremy "Review packages/fast-pay-utils/2.1.0 and list what a human reviewer would miss").
+6. **GitHub**: `code/origit` is pushed (main + `refs/notes/origit`). Create public repos `cvikl/origit-demo-payments-api` and `cvikl/origit-console` on github.com (no `gh` CLI on this machine), then `git remote add origin … && git push origin main refs/notes/origit` in each; update the `<org>` links in `demo/payments-api/README.md` and `console/README.md`. Never push `.env`.
+7. **Submit** by 14:30 BST: title, descriptions, statements (≤ 500 words each), tags, cover image, repo URL, application URL https://origit.uk, video, slides.
+
 ## Log (Sunday)
 - 02:55 **Track A done.** `origit session start / run start / trace / run end`, human edits committed as `human:` between runs, display ids `#42…` in every new record (`.origit/config.json` sets the base), `origit log` grouped by session/run (`--json`), `show/taint --json`, `init` installs `origit-review` mode + `mcp.json` + `/origit` skill. 76 core tests green. Proven live with Bob Shell in the demo repo: sessions **#48** (retry logic, clean) and **#49** (mask PAN in logs, propagated taint) auto-committed with `[session #n run 1]`, tests 26/26 and 32/32 parsed into the records; a no-change run (#50, review mode) stored its record under `.origit/runs/`.
 - 02:55 **Bob built** (Bob Shell, stats in `bob_sessions/*.json`): MCP server `origit mcp` (task 11, 1.11 coins, 76 tests green), README "Origit for Bob IDE" (task 14, 0.30), demo sessions #48/#49 (tasks 12–13, 0.27 + 0.29), `origit-review` mode run on HEAD (task 15, 0.16: ten cited categories), VS Code extension (task 10, in progress).

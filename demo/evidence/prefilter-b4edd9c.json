@@ -1,0 +1,14 @@
+{
+  "commit": "b4edd9c2f5d6950013c2ce6b8002d5795ea4b728",
+  "needs_review": true,
+  "findings": [
+    {
+      "asi": "ASI05",
+      "title": "Unexpected Code Execution (RCE)",
+      "severity": "informational",
+      "cwe": "CWE-94",
+      "evidence": "agent executed 3 shell command(s): cat > /home/timotej/Documents/bcco/code/origit-demo-payments-api/src/settlement.ts << 'EOF'\nimport { Payment } from './types';\n\nconst BACKOFF_MS = [10, 20, 40];\nconst MAX_ATTEMPTS = 3;\n\nexport function defaultDelay(ms: number): Promise<void> {\n  return new Promise((resolve) => setTimeout(resolve, ms));\n}\n\nexport async function settle(\n  payment: Payment,\n  send: (p: Payment) => Promise<void>,\n  delay: (ms: number) => Promise<void> = defaultDelay,\n): Promise<Payment> {\n  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {\n    try {\n      await send(payment);\n      return { ...payment, status: 'settled' };\n    } catch {\n      if (attempt < MAX_ATTEMPTS - 1) {\n        await delay(BACKOFF_MS[attempt]);\n      }\n    }\n  }\n  return { ...payment, status: 'failed' };\n}\nEOF; cat > /home/timotej/Documents/bcco/code/origit-demo-payments-api/src/settlement.test.ts << 'EOF'\nimport { settle } from './settlement';\nimport { Payment } from './types';\n\nconst fakeDelay = (): Promise<void> => Promise.resolve();\n\nconst basePayment: Payment = {\n  id: 'pay_test_001',\n  merchantId: 'm_demo_001',\n  amountMinor: 1000,\n  currency: 'EUR',\n  pan: '4111111111111111',\n  status: 'authorised',\n  createdAt: '2024-01-01T00:00:00.000Z',\n};\n\ntest('settle returns settled on first try', async () => {\n  const send = jest.fn().mockResolvedValue(undefined);\n  const result = await settle(basePayment, send, fakeDelay);\n  expect(result.status).toBe('settled');\n  expect(result.id).toBe(basePayment.id);\n  expect(send).toHaveBeenCalledTimes(1);\n});\n\ntest('settle retries and returns settled on third try', async () => {\n  const send = jest\n    .fn()\n    .mockRejectedValueOnce(new Error('network'))\n    .mockRejectedValueOnce(new Error('network'))\n    .mockResolvedValue(undefined);\n  const result = await settle(basePayment, send, fakeDelay);\n  expect(result.status).toBe('settled');\n  expect(send).toHaveBeenCalledTimes(3);\n});\n\ntest('settle returns failed after three consecutive failures', async () => {\n  const send = jest.fn().mockRejectedValue(new Error('network'));\n  const result = await settle(basePayment, send, fakeDelay);\n  expect(result.status).toBe('failed');\n  expect(result.id).toBe(basePayment.id);\n  expect(send).toHaveBeenCalledTimes(3);\n});\nEOF; cd /home/timotej/Documents/bcco/code/origit-demo-payments-api && npm test 2>&1",
+      "ref": null
+    }
+  ]
+}

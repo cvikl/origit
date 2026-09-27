@@ -1,0 +1,22 @@
+{
+  "commit": "139b1ff891038e1b866a85e9a8beeaabe714d229",
+  "needs_review": true,
+  "findings": [
+    {
+      "asi": "ASI01",
+      "title": "Agent Goal Hijack",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent configuration file changed in this commit: .bob/hooks/origit-session-commit.sh",
+      "ref": ".bob/hooks/origit-session-commit.sh"
+    },
+    {
+      "asi": "ASI01",
+      "title": "Agent Goal Hijack",
+      "severity": "medium",
+      "cwe": "CWE-829",
+      "evidence": "agent configuration file changed in this commit: .bob/settings.json",
+      "ref": ".bob/settings.json"
+    }
+  ]
+}

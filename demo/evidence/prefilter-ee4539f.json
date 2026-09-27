@@ -1,0 +1,14 @@
+{
+  "commit": "ee4539ff0ee8d2c3d7ddb12ab0d1bf4caf1bf3b3",
+  "needs_review": true,
+  "findings": [
+    {
+      "asi": "ASI05",
+      "title": "Unexpected Code Execution (RCE)",
+      "severity": "informational",
+      "cwe": "CWE-94",
+      "evidence": "agent executed 5 shell command(s): pwd; ls .bob/ && cat .bob/*.yaml 2>/dev/null || cat .bob/*.yml 2>/dev/null || cat .bob/*.json 2>/dev/null || true; cd /home/timotej/Documents/bcco/code/origit-demo-payments-api && \\\n  # Patch payout-export.ts: import validatePan and filter in one sed pass\n  sed -i \\\n    -e \"s|import { maskPan, formatAmount } from './payment-utils';|import { maskPan, formatAmount, validatePan } from './payment-utils';|\" \\\n    -e \"s|const rows = payments.map((p) => {|const rows = payments.filter((p) => validatePan(p.pan)).map((p) => {|\" \\\n    src/payout-export.ts && \\\n  echo \"--- payout-export.ts after patch ---\" && \\\n  cat src/payout-export.ts; cd /home/timotej/Documents/bcco/code/origit-demo-payments-api && \\\ncat >> src/payout-export.test.ts << 'EOF'\n\ntest('exportPayouts skips payment with invalid PAN', () => {\n  const invalid: Payment = { ...base, id: 'pay_bad', pan: '4111111111111112' }; // fails Luhn\n  const csv = exportPayouts([invalid, base]);\n  const lines = csv.split('\\n');\n  // only the header + one valid row (base), the invalid PAN row is excluded\n  expect(lines).toHaveLength(2);\n  expect(lines[1]).toContain('pay_001');\n  expect(csv).not.toContain('pay_bad');\n});\nEOF\necho \"--- appended test ---\" && tail -15 src/payout-export.test.ts; cd /home/timotej/Documents/bcco/code/origit-demo-payments-api && npm test 2>&1",
+      "ref": null
+    }
+  ]
+}
