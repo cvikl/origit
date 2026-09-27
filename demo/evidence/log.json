@@ -1,8 +1,65 @@
 {
   "repo": "origit-demo-payments-api",
-  "head": "36c384bd1ad0351e6f358ce4bef9d8b709887b4d",
+  "head": "6d4d325c1959cab9c95c8e64663f4487c8111ce5",
   "base": 42,
   "sessions": [
+    {
+      "id": "human",
+      "number": null,
+      "label": "human",
+      "actor": "human",
+      "mode": "origit-build",
+      "started_at": "2026-09-27T01:33:36Z",
+      "ended_at": "2026-09-27T01:33:36Z",
+      "runs": [
+        {
+          "run": null,
+          "sha": "6d4d325c1959cab9c95c8e64663f4487c8111ce5",
+          "subject": "chore: session display numbers start at #42 (.origit/config.json)",
+          "n_read": 0,
+          "n_wrote": 0,
+          "n_deps": 0,
+          "tests": {
+            "failed": 0,
+            "passed": 0,
+            "run": false
+          },
+          "approver": "bernard",
+          "record": {
+            "actor": {
+              "config_sha256": "335c7c9104275361523789847695cad743ad401656939209ddaa47631f523aea",
+              "kind": "human",
+              "mode": "origit-build",
+              "model": null
+            },
+            "added_deps": [],
+            "approved_at": "2026-09-27T01:33:36Z",
+            "approver": "bernard",
+            "author": "Timotej",
+            "commands": [],
+            "read": [],
+            "record_sha256": "99a9582f1f869725ee52a217048e80c50d363cd9afd05d22b8aaa50953a45c2a",
+            "schema": "origit/record/v1",
+            "session": {
+              "ended_at": "2026-09-27T01:33:36Z",
+              "id": "human:Timotej:2026-09-27T01:33:36Z",
+              "started_at": "2026-09-27T01:33:36Z"
+            },
+            "tests": {
+              "failed": 0,
+              "passed": 0,
+              "run": false
+            },
+            "wrote": []
+          },
+          "prefilter": {
+            "needs_review": false,
+            "max_severity": null,
+            "reasons": []
+          }
+        }
+      ]
+    },
     {
       "id": "b9c6082e8d9f0b11f009ac1c0a686bc1",
       "number": 49,
