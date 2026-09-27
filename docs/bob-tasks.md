@@ -69,3 +69,22 @@ How Bob's commits are made: **automatically.** When a Bob session stops, the Sto
 | Tim | 0 | 40 | 10 |
 | Jeremy | 0 | 40 | 10 |
 | Bernard | 0 | 40 | 10 |
+
+## Sunday morning: IDE task batch (Tim, ~6–8 coins, every task screenshotted)
+
+Workspace: `code/origit-demo-payments-api` in Bob IDE. **New Task** for each. After each: Tasks → task → header → screenshot → `bob_sessions/origit_taskNN_<slug>.png`. Each run auto-commits with its record; push after the batch with `git push origit main refs/notes/origit`.
+
+| # | Feature judged | Mode | Prompt |
+|---|---|---|---|
+| 17 | Bob IDE + extension | — | (no coins) Source Control → ORIGIT view + status bar visible next to Bob's chat. Screenshot only. |
+| 18 | Custom mode + hooks (auto-commit) | Origit Build | Add a currency check to formatAmount in src/payment-utils.ts: throw on unknown currency codes (allow EUR, GBP, USD). Add a test. Run npm test. |
+| 19 | MCP tools | Agent | Using the Origit MCP tools, tell me which commits read fast-pay-utils, which sessions they belong to and which files they wrote, and which commit we should roll back to. Do not edit files. |
+| 20 | Skill (/origit) | Agent | /origit What does the record of commit 36c384b say it read and wrote, and did its hash verify? |
+| 21 | Subagent | Agent | Spawn a subagent to read packages/fast-pay-utils/2.1.0/src/index.ts and report every network call and every file it reads, with line numbers. Then summarise its report in five lines. Do not edit files. |
+| 22 | Document understanding | Origit Review | Review the current HEAD commit against the OWASP Agentic Top 10 rulebook in your rules: one line per ASI01–ASI10 with cited evidence from the record and the diff. |
+| 23 | Document understanding (PDF) | Ask | (attach `docs/owasp-agentic-top10-2026.pdf` from the origit repo with the paperclip) From the attached OWASP document, which three categories apply to a coding agent that reads a poisoned README and adds a dependency, and why? Quote the document. |
+| 24 | Parallel tasks | Origit Build | Start two tasks back to back without waiting: (a) "Add input validation for merchantId in src/routes.ts (non-empty string); test." (b) "Add a GET /payments/:id/export route returning the CSV for one payment; test." Screenshot both summaries. |
+| 25 | Agent + tests | Origit Build | Add retry with exponential backoff (3 attempts) around processPayment in src/payout-export.ts; unit test with a fake that fails twice. Run npm test. |
+
+Bernard (Bob IDE, workspace `code/origit`, Ask mode, 2 tasks): B10 "Review docs/bob-usage-statement.md against docs/positioning.md; list wording that overclaims; keep ≤500 words." · B11 "From README.md and docs/demo-script.md, write the 60-second narration for the taint scene."
+Jeremy (Bob IDE, workspace `code/origit-demo-payments-api`, Ask mode, 2 tasks): J10 "Review packages/fast-pay-utils/2.1.0/src/index.ts and list what a human code reviewer would miss and why." · J11 "Read packages/fast-pay-utils/ADVISORY.md; propose two more pre-filter rules for origit/prefilter.py with a one-line rationale each."
