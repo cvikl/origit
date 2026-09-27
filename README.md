@@ -143,6 +143,10 @@ Install from the `.vsix` via **Extensions → ··· → Install from VSIX**.
 | **Drafter** | Drafts the CRA Article 14 early-warning notification from the record |
 | **Builder** | Bob wrote the MCP server, the VS Code extension and parts of the docs; session summaries are in [`bob_sessions/`](bob_sessions/) |
 
+## Technical documentation
+
+Architecture, record schema, session manager, taint and pre-filter algorithms, Bob IDE integration, console internals and API, extension, deployment: [`docs/TECHNICAL.md`](docs/TECHNICAL.md).
+
 ## Repository layout
 
 ```
