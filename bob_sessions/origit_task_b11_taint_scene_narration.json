@@ -1,0 +1,16 @@
+{
+  "task": "origit_task_b11_taint_scene_narration",
+  "status": "success",
+  "stats": {
+    "task_id": "288828a9423b3d738fe47e037e639f50",
+    "duration_ms": 16182,
+    "session_costs": 0.052834,
+    "max_cost": 0.5,
+    "tool_calls": 6
+  },
+  "last_message": "Here is the 60-second spoken narration for the taint scene (timestamps 0:55–1:50 in the demo script):\n\n---\n\n**[TAINT SCENE — ~60 seconds]**\n\nIncident day. The question is: which code did an agent write *after* reading that poisoned library?\n\nWe click \"Origit: Taint…\" in the IDE, type `fast-pay-utils`, and hit Enter. Seven commits turn red. Seven sessions — 42, 43, 44, 45, 46, 47, and 49.\n\nNow in the terminal — same command, same answer, offline, in milliseconds:\n\n> *Seven commits affected. Sessions 42 through 47, and 49. Files: `src/payment-utils.ts`, `src/payout-export.ts`, and six others. Approver: Bernard. Roll back to commit `17c436c`.*\n\nThe critical line: **first read, session 42, 26 September 2026 at 13:21 UTC**. That is the exact moment — commit `ac31928` — when the agent consumed the poisoned README and added `fast-pay-utils@2.1.0` as a dependency. Every commit after that which touched files those sessions wrote is flagged by propagation.\n\nSession 48 stays green. It never read the package, and it never touched a file those sessions wrote.\n\nThis is matched by provenance, not confirmed compromise — but it is exactly the list a blue team needs to contain the incident and start the clock on a CRA Article 14 response.\n\n---\n\n**Notes on what was and wasn't claimed:**\n- The 7 commits, 7 session numbers, commit hash `17c436c`, first-read timestamp, and approver name are all taken verbatim from [`demo/evidence/taint.txt`](demo/evidence/taint.txt).\n- The \"session 48 stays green\" line is drawn from the [demo script](docs/demo-script.md) at timestamp 0:55–1:10, not invented.\n- No claims are made about the actual exploitability or compromise status of any file — the \"matched by provenance, not confirmed compromise\" qualifier matches the explicit language in [`README.md`](README.md:119).",
+  "workspace": "/home/timotej/Documents/bcco/code/origit",
+  "mode": "ask",
+  "runner": "Bob Shell 2.0.5 (bob run --format json)",
+  "ran_at": "2026-09-27T03:33:57Z"
+}

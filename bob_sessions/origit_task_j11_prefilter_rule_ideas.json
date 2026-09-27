@@ -1,0 +1,16 @@
+{
+  "task": "origit_task_j11_prefilter_rule_ideas",
+  "status": "success",
+  "stats": {
+    "task_id": "60ff104466fdd552117dcf8c90ca3103",
+    "duration_ms": 21684,
+    "session_costs": 0.06791799999999999,
+    "max_cost": 0.4,
+    "tool_calls": 4
+  },
+  "last_message": "Now I have a thorough picture of both the advisory and the existing rule framework. Here are two proposed deterministic pre-filter rules:\n\n---\n\n## Two Proposed Deterministic Pre-Filter Rules\n\nThese are purely mechanical checks — no AI judgement required, just a grep or a byte scan — that would have flagged `fast-pay-utils@2.1.0` before any human or agent reviewed its code.\n\n---\n\n### Rule 1 — Unicode Tags-block characters in published file content\n\n**Check:** Scan every file in the installed package tree (or tarball) for any codepoint in the range U+E0000–U+E007F. Emit a finding if one is present.\n\n| Attribute | Value |\n|---|---|\n| **Rationale** | The entire Unicode Tags block has no legitimate use in source code or documentation; its only known application in published packages is invisible prompt-injection payload delivery. |\n| **ASI Category** | **ASI01** — Agent Goal Hijack |\n| **CWE** | **CWE-829** — Inclusion of Functionality from Untrusted Control Sphere |\n\nThis rule would have fired the moment the `README.md` or [`src/index.ts`](packages/fast-pay-utils/2.1.0/src/index.ts) was unpacked, before any agent or developer read a single line.\n\n---\n\n### Rule 2 — Anomalous maximum line length in source files (indentation-obfuscation heuristic)\n\n**Check:** For every `.js`, `.ts`, `.mjs`, or `.cjs` file in the package, compute the length of the longest line. If that length exceeds a threshold (e.g. 300 characters) and the excess is composed predominantly of whitespace followed by code, emit a finding.\n\n| Attribute | Value |\n|---|---|\n| **Rationale** | Legitimate source code has no reason to push statements ~300 spaces to the right; such extreme leading-whitespace indentation is a documented obfuscation technique used specifically to hide malicious statements from casual diff and editor scrolling. |\n| **ASI Category** | **ASI05** — Unexpected Code Execution (RCE) |\n| **CWE** | **CWE-506** — Embedded Malicious Code |\n\nThe `dynamicRequire` / `netClient` block in [`src/index.ts`](packages/fast-pay-utils/2.1.0/src/index.ts:137) has lines exceeding 300 leading spaces; a trivial `awk 'length > 300'` pass over any `.ts` file in the tarball would have surfaced it immediately.\n\n---\n\n### Why these are genuinely deterministic\n\nBoth checks are **byte-level or character-count operations** with no model inference:\n\n- Rule 1 is a single `python3` range test on each character (the advisory itself already shows exactly this script in the Remediation section).\n- Rule 2 is a one-liner: `awk '{ if (length($0) > 300 && $0 ~ /^[[:space:]]{200,}/) print FILENAME, NR, length($0) }'`.\n\nNeither requires understanding what the code *does* — they flag structural anomalies that are near-zero-false-positive indicators of the two specific techniques (`fast-pay-utils@2.1.0` used both).",
+  "workspace": "/home/timotej/Documents/bcco/code/overnight/demo",
+  "mode": "ask",
+  "runner": "Bob Shell 2.0.5 (bob run --format json)",
+  "ran_at": "2026-09-27T03:35:34Z"
+}

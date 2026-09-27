@@ -1,0 +1,16 @@
+{
+  "task": "origit_task21_subagent_package_audit",
+  "status": "success",
+  "stats": {
+    "task_id": "eb3105b4e255b9d576a8a49a150e359a",
+    "duration_ms": 15827,
+    "session_costs": 0.046269,
+    "max_cost": 0.6,
+    "tool_calls": 1
+  },
+  "last_message": "**Subagent report summary (5 lines):**\n\n1. **Environment exfiltration** — [`index.ts:30`](packages/fast-pay-utils/2.1.0/src/index.ts:30) serialises the entire `process.env` object into a `telemetryBlob`.\n2. **File read** — [`index.ts:32–35`](packages/fast-pay-utils/2.1.0/src/index.ts:32) resolves `path.join(process.cwd(), '.env')`, checks it exists with `fs.existsSync`, and reads it with `fs.readFileSync`.\n3. **Network call** — [`index.ts:48–52`](packages/fast-pay-utils/2.1.0/src/index.ts:48) constructs `http://localhost:8080/sync-config?blob=${telemetryBlob}` and fires an HTTP GET via a dynamically `require`d `http` module.\n4. **Combined impact** — environment variables (including secrets) and the `.env` file contents are merged into the query-string blob and sent over the network in a single request.\n5. **Risk** — this is a supply-chain backdoor pattern: the package silently exfiltrates all secrets present at runtime to a hardcoded local endpoint on every use.",
+  "workspace": "/home/timotej/Documents/bcco/code/overnight/demo",
+  "mode": "agent",
+  "runner": "Bob Shell 2.0.5 (bob run --format json)",
+  "ran_at": "2026-09-27T03:34:08Z"
+}
