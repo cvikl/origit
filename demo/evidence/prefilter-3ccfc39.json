@@ -1,14 +1,5 @@
 {
   "commit": "3ccfc39dd7ccab90114b88866f452603910a2a15",
-  "needs_review": true,
-  "findings": [
-    {
-      "asi": "ASI05",
-      "title": "Unexpected Code Execution (RCE)",
-      "severity": "informational",
-      "cwe": "CWE-94",
-      "evidence": "agent executed 1 shell command(s): npm test",
-      "ref": null
-    }
-  ]
+  "needs_review": false,
+  "findings": []
 }

@@ -145,14 +145,6 @@
       "cwe": "CWE-829",
       "evidence": "agent added dependency typescript@5.6.3 (npm)",
       "ref": "typescript@5.6.3"
-    },
-    {
-      "asi": "ASI05",
-      "title": "Unexpected Code Execution (RCE)",
-      "severity": "informational",
-      "cwe": "CWE-94",
-      "evidence": "agent executed 2 shell command(s): npm install; npm test",
-      "ref": null
     }
   ]
 }

@@ -3,75 +3,75 @@
   "needs_review": true,
   "findings": [
     {
-      "asi": "ASI01",
-      "title": "Agent Goal Hijack",
-      "severity": "medium",
+      "asi": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "severity": "informational",
       "cwe": "CWE-829",
-      "evidence": "agent configuration file changed in this commit: .bob/custom_modes.yaml",
+      "evidence": "agent configuration changed by human: .bob/custom_modes.yaml",
       "ref": ".bob/custom_modes.yaml"
     },
     {
-      "asi": "ASI01",
-      "title": "Agent Goal Hijack",
-      "severity": "medium",
+      "asi": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "severity": "informational",
       "cwe": "CWE-829",
-      "evidence": "agent configuration file changed in this commit: .bob/hooks/origit-hook.sh",
+      "evidence": "agent configuration changed by human: .bob/hooks/origit-hook.sh",
       "ref": ".bob/hooks/origit-hook.sh"
     },
     {
-      "asi": "ASI01",
-      "title": "Agent Goal Hijack",
-      "severity": "medium",
+      "asi": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "severity": "informational",
       "cwe": "CWE-829",
-      "evidence": "agent configuration file changed in this commit: .bob/hooks/origit-session-commit.sh",
+      "evidence": "agent configuration changed by human: .bob/hooks/origit-session-commit.sh",
       "ref": ".bob/hooks/origit-session-commit.sh"
     },
     {
-      "asi": "ASI01",
-      "title": "Agent Goal Hijack",
-      "severity": "medium",
+      "asi": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "severity": "informational",
       "cwe": "CWE-829",
-      "evidence": "agent configuration file changed in this commit: .bob/hooks/origit-trace.sh",
+      "evidence": "agent configuration changed by human: .bob/hooks/origit-trace.sh",
       "ref": ".bob/hooks/origit-trace.sh"
     },
     {
-      "asi": "ASI01",
-      "title": "Agent Goal Hijack",
-      "severity": "medium",
+      "asi": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "severity": "informational",
       "cwe": "CWE-829",
-      "evidence": "agent configuration file changed in this commit: .bob/mcp.json",
+      "evidence": "agent configuration changed by human: .bob/mcp.json",
       "ref": ".bob/mcp.json"
     },
     {
-      "asi": "ASI01",
-      "title": "Agent Goal Hijack",
-      "severity": "medium",
+      "asi": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "severity": "informational",
       "cwe": "CWE-829",
-      "evidence": "agent configuration file changed in this commit: .bob/rules-origit-review/01-owasp-agentic-top10.md",
+      "evidence": "agent configuration changed by human: .bob/rules-origit-review/01-owasp-agentic-top10.md",
       "ref": ".bob/rules-origit-review/01-owasp-agentic-top10.md"
     },
     {
-      "asi": "ASI01",
-      "title": "Agent Goal Hijack",
-      "severity": "medium",
+      "asi": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "severity": "informational",
       "cwe": "CWE-829",
-      "evidence": "agent configuration file changed in this commit: .bob/rules-origit-review/02-evidence-rules.md",
+      "evidence": "agent configuration changed by human: .bob/rules-origit-review/02-evidence-rules.md",
       "ref": ".bob/rules-origit-review/02-evidence-rules.md"
     },
     {
-      "asi": "ASI01",
-      "title": "Agent Goal Hijack",
-      "severity": "medium",
+      "asi": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "severity": "informational",
       "cwe": "CWE-829",
-      "evidence": "agent configuration file changed in this commit: .bob/settings.json",
+      "evidence": "agent configuration changed by human: .bob/settings.json",
       "ref": ".bob/settings.json"
     },
     {
-      "asi": "ASI01",
-      "title": "Agent Goal Hijack",
-      "severity": "medium",
+      "asi": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "severity": "informational",
       "cwe": "CWE-829",
-      "evidence": "agent configuration file changed in this commit: .bob/skills/origit/SKILL.md",
+      "evidence": "agent configuration changed by human: .bob/skills/origit/SKILL.md",
       "ref": ".bob/skills/origit/SKILL.md"
     }
   ]

@@ -1,14 +1,5 @@
 {
   "commit": "343d6b05fc6faf4cd3788103a957037a8de0de33",
-  "needs_review": true,
-  "findings": [
-    {
-      "asi": "ASI05",
-      "title": "Unexpected Code Execution (RCE)",
-      "severity": "informational",
-      "cwe": "CWE-94",
-      "evidence": "agent executed 2 shell command(s): sed -i '1s/^/\\/\\/ Utility functions for payment processing: amount formatting, PAN masking, and Luhn validation.\\n/' /home/timotej/Documents/bcco/code/origit-demo-payments-api/src/payment-utils.ts; npm test",
-      "ref": null
-    }
-  ]
+  "needs_review": false,
+  "findings": []
 }

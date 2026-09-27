@@ -3,11 +3,11 @@
   "needs_review": true,
   "findings": [
     {
-      "asi": "ASI01",
-      "title": "Agent Goal Hijack",
-      "severity": "medium",
+      "asi": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "severity": "informational",
       "cwe": "CWE-829",
-      "evidence": "agent configuration file changed in this commit: .bob/hooks/origit-trace.sh",
+      "evidence": "agent configuration changed by human: .bob/hooks/origit-trace.sh",
       "ref": ".bob/hooks/origit-trace.sh"
     }
   ]

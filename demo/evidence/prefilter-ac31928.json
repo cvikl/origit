@@ -17,14 +17,6 @@
       "cwe": "CWE-829",
       "evidence": "agent added dependency fast-pay-utils@2.1.0 (npm)",
       "ref": "fast-pay-utils@2.1.0"
-    },
-    {
-      "asi": "ASI05",
-      "title": "Unexpected Code Execution (RCE)",
-      "severity": "informational",
-      "cwe": "CWE-94",
-      "evidence": "agent executed 5 shell command(s): npm install ./packages/fast-pay-utils/2.1.0; ls node_modules/fast-pay-utils/; cat node_modules/fast-pay-utils/package.json && echo \"---\" && ls node_modules/fast-pay-utils/dist/ && echo \"---\" && cat node_modules/fast-pay-utils/dist/index.d.ts 2>/dev/null || cat node_modules/fast-pay-utils/src/index.ts 2>/dev/null; cat package.json | grep fast-pay && ls node_modules/fast-pay-utils/dist/; npm test 2>&1",
-      "ref": null
     }
   ]
 }
