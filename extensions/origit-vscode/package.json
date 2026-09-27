@@ -1,0 +1,76 @@
+{
+  "name": "origit-vscode",
+  "displayName": "Origit for Bob IDE",
+  "description": "Agent provenance layer for git — view sessions, runs and taint in VS Code.",
+  "version": "0.1.0",
+  "publisher": "origit",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": ["SCM Providers"],
+  "activationEvents": [
+    "workspaceContains:.origit/**",
+    "onView:origit.sessions"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Origit",
+      "properties": {
+        "origit.binary": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the origit CLI binary. Leave empty to resolve via git config origit.bin or PATH."
+        }
+      }
+    },
+    "views": {
+      "scm": [
+        {
+          "id": "origit.sessions",
+          "name": "ORIGIT"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "origit.refresh",
+        "title": "Origit: Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "origit.taint",
+        "title": "Origit: Taint…"
+      },
+      {
+        "command": "origit.clearTaint",
+        "title": "Origit: Clear taint"
+      },
+      {
+        "command": "origit.showRecord",
+        "title": "Origit: Show record"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "origit.refresh",
+          "when": "view == origit.sessions",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "origit.showRecord",
+          "when": "view == origit.sessions && viewItem =~ /^commit/"
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.90.0",
+    "typescript": "^5.4.0"
+  }
+}
