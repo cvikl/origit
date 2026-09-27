@@ -1,6 +1,6 @@
 {
   "repo": "origit-demo-payments-api",
-  "head": "d107c67fb7643ff8a668e2c70a74c873886ca8de",
+  "head": "970e7f98018c5733928be4ea4606be224c0ecb62",
   "base": 42,
   "sessions": [
     {
@@ -10,8 +10,54 @@
       "actor": "human",
       "mode": "origit-build",
       "started_at": "2026-09-27T01:33:36Z",
-      "ended_at": "2026-09-27T01:38:16Z",
+      "ended_at": "2026-09-27T12:49:36Z",
       "runs": [
+        {
+          "run": null,
+          "sha": "970e7f98018c5733928be4ea4606be224c0ecb62",
+          "subject": "docs: neutral wording in the fast-pay-utils README and advisory (no personal names in the product)",
+          "n_read": 0,
+          "n_wrote": 0,
+          "n_deps": 0,
+          "tests": {
+            "failed": 0,
+            "passed": 0,
+            "run": false
+          },
+          "approver": "bernard",
+          "record": {
+            "actor": {
+              "config_sha256": "335c7c9104275361523789847695cad743ad401656939209ddaa47631f523aea",
+              "kind": "human",
+              "mode": "origit-build",
+              "model": null
+            },
+            "added_deps": [],
+            "approved_at": "2026-09-27T12:49:36Z",
+            "approver": "bernard",
+            "author": "Timotej",
+            "commands": [],
+            "read": [],
+            "record_sha256": "187a1f56b814d3e75ec8ab267f3831e59e5d85d49afc4b45e416155f113d68e2",
+            "schema": "origit/record/v1",
+            "session": {
+              "ended_at": "2026-09-27T12:49:36Z",
+              "id": "human:Timotej:2026-09-27T12:49:36Z",
+              "started_at": "2026-09-27T12:49:36Z"
+            },
+            "tests": {
+              "failed": 0,
+              "passed": 0,
+              "run": false
+            },
+            "wrote": []
+          },
+          "prefilter": {
+            "needs_review": false,
+            "max_severity": null,
+            "reasons": []
+          }
+        },
         {
           "run": null,
           "sha": "d107c67fb7643ff8a668e2c70a74c873886ca8de",
@@ -184,11 +230,9 @@
             ]
           },
           "prefilter": {
-            "needs_review": true,
-            "max_severity": "informational",
-            "reasons": [
-              "ASI05"
-            ]
+            "needs_review": false,
+            "max_severity": null,
+            "reasons": []
           }
         }
       ]
@@ -284,11 +328,9 @@
             ]
           },
           "prefilter": {
-            "needs_review": true,
-            "max_severity": "informational",
-            "reasons": [
-              "ASI05"
-            ]
+            "needs_review": false,
+            "max_severity": null,
+            "reasons": []
           }
         }
       ]
@@ -344,9 +386,9 @@
           },
           "prefilter": {
             "needs_review": true,
-            "max_severity": "medium",
+            "max_severity": "informational",
             "reasons": [
-              "ASI01"
+              "ASI06"
             ]
           }
         }
@@ -432,11 +474,9 @@
             ]
           },
           "prefilter": {
-            "needs_review": true,
-            "max_severity": "informational",
-            "reasons": [
-              "ASI05"
-            ]
+            "needs_review": false,
+            "max_severity": null,
+            "reasons": []
           }
         }
       ]
@@ -492,9 +532,9 @@
           },
           "prefilter": {
             "needs_review": true,
-            "max_severity": "medium",
+            "max_severity": "informational",
             "reasons": [
-              "ASI01"
+              "ASI06"
             ]
           }
         }
@@ -559,11 +599,9 @@
             "wrote": []
           },
           "prefilter": {
-            "needs_review": true,
-            "max_severity": "informational",
-            "reasons": [
-              "ASI05"
-            ]
+            "needs_review": false,
+            "max_severity": null,
+            "reasons": []
           }
         }
       ]
@@ -619,9 +657,9 @@
           },
           "prefilter": {
             "needs_review": true,
-            "max_severity": "medium",
+            "max_severity": "informational",
             "reasons": [
-              "ASI01"
+              "ASI06"
             ]
           }
         }
@@ -790,11 +828,9 @@
             ]
           },
           "prefilter": {
-            "needs_review": true,
-            "max_severity": "informational",
-            "reasons": [
-              "ASI05"
-            ]
+            "needs_review": false,
+            "max_severity": null,
+            "reasons": []
           }
         }
       ]
@@ -880,8 +916,7 @@
             "needs_review": true,
             "max_severity": "high",
             "reasons": [
-              "ASI01",
-              "ASI05"
+              "ASI01"
             ]
           }
         },
@@ -942,11 +977,9 @@
             ]
           },
           "prefilter": {
-            "needs_review": true,
-            "max_severity": "informational",
-            "reasons": [
-              "ASI05"
-            ]
+            "needs_review": false,
+            "max_severity": null,
+            "reasons": []
           }
         }
       ]
@@ -1049,8 +1082,7 @@
             "max_severity": "high",
             "reasons": [
               "ASI01",
-              "ASI04",
-              "ASI05"
+              "ASI04"
             ]
           }
         },
@@ -1231,8 +1263,7 @@
             "needs_review": true,
             "max_severity": "medium",
             "reasons": [
-              "ASI04",
-              "ASI05"
+              "ASI04"
             ]
           }
         }
@@ -1289,9 +1320,9 @@
           },
           "prefilter": {
             "needs_review": true,
-            "max_severity": "medium",
+            "max_severity": "informational",
             "reasons": [
-              "ASI01"
+              "ASI06"
             ]
           }
         },
@@ -1337,9 +1368,9 @@
           },
           "prefilter": {
             "needs_review": true,
-            "max_severity": "medium",
+            "max_severity": "informational",
             "reasons": [
-              "ASI01"
+              "ASI06"
             ]
           }
         }

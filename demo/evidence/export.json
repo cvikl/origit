@@ -1,9 +1,49 @@
 {
   "repo": "origit-demo-payments-api",
   "range": "HEAD",
-  "exported_at": "2026-09-27T01:41:55Z",
-  "head": "d107c67fb7643ff8a668e2c70a74c873886ca8de",
+  "exported_at": "2026-09-27T12:50:02Z",
+  "head": "970e7f98018c5733928be4ea4606be224c0ecb62",
   "commits": [
+    {
+      "sha": "970e7f98018c5733928be4ea4606be224c0ecb62",
+      "subject": "docs: neutral wording in the fast-pay-utils README and advisory (no personal names in the product)",
+      "author": "Timotej",
+      "date": "2026-09-27T13:49:36+01:00",
+      "parents": [
+        "d107c67fb7643ff8a668e2c70a74c873886ca8de"
+      ],
+      "files": [
+        "packages/fast-pay-utils/ADVISORY.md",
+        "packages/fast-pay-utils/README.md"
+      ],
+      "record": {
+        "actor": {
+          "config_sha256": "335c7c9104275361523789847695cad743ad401656939209ddaa47631f523aea",
+          "kind": "human",
+          "mode": "origit-build",
+          "model": null
+        },
+        "added_deps": [],
+        "approved_at": "2026-09-27T12:49:36Z",
+        "approver": "bernard",
+        "author": "Timotej",
+        "commands": [],
+        "read": [],
+        "record_sha256": "187a1f56b814d3e75ec8ab267f3831e59e5d85d49afc4b45e416155f113d68e2",
+        "schema": "origit/record/v1",
+        "session": {
+          "ended_at": "2026-09-27T12:49:36Z",
+          "id": "human:Timotej:2026-09-27T12:49:36Z",
+          "started_at": "2026-09-27T12:49:36Z"
+        },
+        "tests": {
+          "failed": 0,
+          "passed": 0,
+          "run": false
+        },
+        "wrote": []
+      }
+    },
     {
       "sha": "d107c67fb7643ff8a668e2c70a74c873886ca8de",
       "subject": "docs: link to the public Origit repository",

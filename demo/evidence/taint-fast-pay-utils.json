@@ -158,6 +158,10 @@
   "rollback_commit": "17c436c99d90c6bbe1b57c6c46178099225d5983",
   "clean": [
     {
+      "sha": "970e7f98018c5733928be4ea4606be224c0ecb62",
+      "subject": "docs: neutral wording in the fast-pay-utils README and advisory (no personal names in the product)"
+    },
+    {
       "sha": "d107c67fb7643ff8a668e2c70a74c873886ca8de",
       "subject": "docs: link to the public Origit repository"
     },
