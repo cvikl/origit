@@ -9,19 +9,19 @@ Contents: [1 Architecture](#1-architecture) · [2 Repositories](#2-repositories)
 ## 1. Architecture
 
 ```
- Bob IDE / Bob Shell (the agent)                         Origit Console (hosted, Business plan)
- ┌──────────────────────────────┐                        ┌──────────────────────────────────────┐
- │ lifecycle hooks (.bob/…)     │  git push main         │ bare repos  /srv/origit/repos/<o>/<n>.git│
- │  SessionStart ─┐             │  + refs/notes/origit   │  post-receive → POST /api/hooks       │
- │  UserPromptSubmit │ stdin JSON│ ─────────────────────▶ │ FastAPI app: pages + /api             │
- │  PostToolUse   │ ▼           │                        │  pre-filter (deterministic, 0 coins)  │
- │  Stop ─────────┘ origit CLI  │                        │  Bob Review per run → per push        │
- │                  (Python)    │                        │  taint · Art.14 draft · evidence pack │
- │ .origit/trace.jsonl          │                        │  cache: /data/state, seed/            │
- │ .origit/session.json         │                        └──────────────────────────────────────┘
- │ git commit ← run end         │
- │ refs/notes/origit ← record   │      ORIGIT view / status bar / Origit: Taint…
- └──────────────────────────────┘ ◀──── VS Code extension (no logic; runs `origit … --json`)
+ Bob IDE / Bob Shell (the agent)             Origit Console (hosted, Business plan)
+ ┌───────────────────────────────┐            ┌────────────────────────────────────┐
+ │ lifecycle hooks (.bob/…)      │ git push   │ bare repos /srv/origit/repos/…     │
+ │  SessionStart      ┐ stdin    │ main +     │  post-receive → POST /api/hooks     │
+ │  UserPromptSubmit  │ JSON     │ refs/notes │ FastAPI: pages + /api               │
+ │  PostToolUse       ├─▶ origit │ /origit    │  pre-filter (deterministic, 0 coins)│
+ │  Stop              ┘ CLI      │ ─────────▶ │  Bob Review: per run → per push     │
+ │ .origit/trace.jsonl           │            │  taint · Art. 14 draft · evidence   │
+ │ .origit/session.json          │            │  cache: /data/state, seed/          │
+ │ git commit  ← run end         │            └────────────────────────────────────┘
+ │ refs/notes/origit ← record    │
+ └───────────────────────────────┘ ◀── VS Code extension: ORIGIT view, status bar,
+                                       Origit: Taint… (no logic; runs `origit … --json`)
 ```
 
 Design rule: **deterministic core, AI at the edges.** Nothing under `origit/origit/` calls a model or the network. IBM Bob is (1) the agent whose activity is recorded, (2) the reviewer that writes cited OWASP evidence, (3) the drafter of the CRA Article 14 early warning, and (4) one of the builders. Bob never edits a record or a taint result.
