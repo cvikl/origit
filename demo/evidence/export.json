@@ -1,9 +1,48 @@
 {
   "repo": "origit-demo-payments-api",
   "range": "HEAD",
-  "exported_at": "2026-09-27T01:36:53Z",
-  "head": "6d4d325c1959cab9c95c8e64663f4487c8111ce5",
+  "exported_at": "2026-09-27T01:41:55Z",
+  "head": "d107c67fb7643ff8a668e2c70a74c873886ca8de",
   "commits": [
+    {
+      "sha": "d107c67fb7643ff8a668e2c70a74c873886ca8de",
+      "subject": "docs: link to the public Origit repository",
+      "author": "Timotej",
+      "date": "2026-09-27T02:38:16+01:00",
+      "parents": [
+        "6d4d325c1959cab9c95c8e64663f4487c8111ce5"
+      ],
+      "files": [
+        "README.md"
+      ],
+      "record": {
+        "actor": {
+          "config_sha256": "335c7c9104275361523789847695cad743ad401656939209ddaa47631f523aea",
+          "kind": "human",
+          "mode": "origit-build",
+          "model": null
+        },
+        "added_deps": [],
+        "approved_at": "2026-09-27T01:38:16Z",
+        "approver": "bernard",
+        "author": "Timotej",
+        "commands": [],
+        "read": [],
+        "record_sha256": "338cefa3a04cd8bf205cb511eb4763d347771aed5c87b75a5af99012fc0fd161",
+        "schema": "origit/record/v1",
+        "session": {
+          "ended_at": "2026-09-27T01:38:16Z",
+          "id": "human:Timotej:2026-09-27T01:38:16Z",
+          "started_at": "2026-09-27T01:38:16Z"
+        },
+        "tests": {
+          "failed": 0,
+          "passed": 0,
+          "run": false
+        },
+        "wrote": []
+      }
+    },
     {
       "sha": "6d4d325c1959cab9c95c8e64663f4487c8111ce5",
       "subject": "chore: session display numbers start at #42 (.origit/config.json)",

@@ -7,8 +7,8 @@ Source of truth: the live demo repository `acme-payments/payments-api` on https:
 | Item | Deck v3 says | Reality (use this) |
 |---|---|---|
 | Console name | "LIVE ORIGIN CONSOLE" (slide 5) | **Origit Console** |
-| Commits in demo repo | 13 commits, 12 with records | **16 commits, 15 with Origit records** (one pre-Origit scaffold commit has none, on purpose: Origit adopts history) |
-| `origit taint fast-pay-utils` | 3 commits affected | **7 commits affected** (3 direct reads/dependency adds + 4 propagated through files those sessions wrote), **9 clean** |
+| Commits in demo repo | 13 commits, 12 with records | **18 commits, 17 with Origit records** (one pre-Origit scaffold commit has none, on purpose: Origit adopts history) |
+| `origit taint fast-pay-utils` | 3 commits affected | **7 commits affected** (3 direct reads/dependency adds + 4 propagated through files those sessions wrote), **11 clean** |
 | Sessions affected | #42, #43, #44 | **#42, #43, #44, #45, #46, #47, #49** (7 sessions); **#48 is clean** (retry logic, never read the package, never touched its files) |
 | Files written (primary) | payout-export.ts, payment-utils.ts | **src/payout-export.ts, src/payment-utils.ts** (+ tests, `jest.config.js`, `node_modules/fast-pay-utils/dist/index.d.ts`, `packages/fast-pay-utils/ADVISORY.md` shown collapsed as "also touched") |
 | Approver / time | bernard, 26 Sep 2026 14:02 UTC | **bernard**, latest approval **27 Sep 2026 01:16 UTC** |
@@ -27,7 +27,7 @@ Source of truth: the live demo repository `acme-payments/payments-api` on https:
 1. **Slide 3 (How it works)** — add one line under the record: *"Bob IDE: ORIGIT panel in Source Control shows every session, run and record; status bar: `Origit: session #48 run 1 · recording`."*
 2. **Slide 5 (Live demo)** — add one line: *"Bob Review on push: cited evidence per OWASP ASI01–ASI10 for every new commit — ASI01 hidden Unicode instruction in the README, ASI04 new dependency, ASI05 commands run — with CVSS-style severity and CWE."*
 3. **Slide 5** — footnote already right: "Affected means matched by provenance, not confirmed compromise." Keep.
-4. **Slide 6 (Product)** — replace the counts with **16 / 15** and add *"one Bob run = one commit = one record (Stop hook auto-commits)"* to the open-source column; the Business column: *"Bob Review on push · Article 14 draft with Bob · Security tracker"*.
+4. **Slide 6 (Product)** — replace the counts with **18 / 17** and add *"one Bob run = one commit = one record (Stop hook auto-commits)"* to the open-source column; the Business column: *"Bob Review on push · Article 14 draft with Bob · Security tracker"*.
 5. **Slide 1 / cover** — keep "Provenance for AI-written code" but the tagline everywhere is *Git tells you what changed. Origit tells you what the agent read before it changed it.*
 
 ## Never say (from the team rules)

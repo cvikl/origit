@@ -1,4 +1,6 @@
 human
+  d107c67         docs: link to the public Origit repository
+           0 read · 0 wrote
   6d4d325         chore: session display numbers start at #42 (.origit/config.json)
            0 read · 0 wrote
 

@@ -1,6 +1,6 @@
 {
   "repo": "origit-demo-payments-api",
-  "head": "6d4d325c1959cab9c95c8e64663f4487c8111ce5",
+  "head": "d107c67fb7643ff8a668e2c70a74c873886ca8de",
   "base": 42,
   "sessions": [
     {
@@ -10,8 +10,54 @@
       "actor": "human",
       "mode": "origit-build",
       "started_at": "2026-09-27T01:33:36Z",
-      "ended_at": "2026-09-27T01:33:36Z",
+      "ended_at": "2026-09-27T01:38:16Z",
       "runs": [
+        {
+          "run": null,
+          "sha": "d107c67fb7643ff8a668e2c70a74c873886ca8de",
+          "subject": "docs: link to the public Origit repository",
+          "n_read": 0,
+          "n_wrote": 0,
+          "n_deps": 0,
+          "tests": {
+            "failed": 0,
+            "passed": 0,
+            "run": false
+          },
+          "approver": "bernard",
+          "record": {
+            "actor": {
+              "config_sha256": "335c7c9104275361523789847695cad743ad401656939209ddaa47631f523aea",
+              "kind": "human",
+              "mode": "origit-build",
+              "model": null
+            },
+            "added_deps": [],
+            "approved_at": "2026-09-27T01:38:16Z",
+            "approver": "bernard",
+            "author": "Timotej",
+            "commands": [],
+            "read": [],
+            "record_sha256": "338cefa3a04cd8bf205cb511eb4763d347771aed5c87b75a5af99012fc0fd161",
+            "schema": "origit/record/v1",
+            "session": {
+              "ended_at": "2026-09-27T01:38:16Z",
+              "id": "human:Timotej:2026-09-27T01:38:16Z",
+              "started_at": "2026-09-27T01:38:16Z"
+            },
+            "tests": {
+              "failed": 0,
+              "passed": 0,
+              "run": false
+            },
+            "wrote": []
+          },
+          "prefilter": {
+            "needs_review": false,
+            "max_severity": null,
+            "reasons": []
+          }
+        },
         {
           "run": null,
           "sha": "6d4d325c1959cab9c95c8e64663f4487c8111ce5",
